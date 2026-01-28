@@ -39,11 +39,8 @@ export default function UserNav({ user }: UserNavProps) {
           <User className="w-5 h-5" />
         </div>
         <div className="hidden sm:flex flex-col items-start text-xs">
-          <span className="font-semibold text-gray-900 leading-none mb-0.5">
+          <span className="font-semibold text-gray-900 leading-none mb-0.5 capitalize">
             {user.name || 'User'}
-          </span>
-          <span className="text-gray-500 leading-none capitalize">
-            {user.role}
           </span>
         </div>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
@@ -51,19 +48,6 @@ export default function UserNav({ user }: UserNavProps) {
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in duration-200">
-          <Link
-            href={user.role === 'organizer' ? '/dashboard' : '/buyer/dashboard'}
-            onClick={() => setIsOpen(false)}
-            className="block px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors"
-          >
-            <p className="text-sm font-semibold text-gray-900 truncate">
-              {user.name || 'Account'}
-            </p>
-            <p className="text-xs text-gray-500 truncate mt-0.5">
-              {user.email}
-            </p>
-          </Link>
-
           <div className="p-1 border-b border-gray-50">
             {user.role === 'organizer' ? (
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>

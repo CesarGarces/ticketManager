@@ -114,3 +114,50 @@ export async function updateEventStatus(id: string, status: EventStatus): Promis
   revalidatePath(`/dashboard/events/${id}`);
   return {};
 }
+
+export async function getDashboardStats() {
+  const supabase = await createServerSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  // Get events with their ticket types
+  const { data: events } = await supabase
+    .from('events')
+    .select(`
+      id,
+      title,
+      ticket_types (
+        name,
+        quantity_sold,
+        price,
+        currency
+      )
+    `)
+    .eq('organizer_id', user.id);
+
+  if (!events) return null;
+
+  const eventSales = events.map(event => ({
+    name: event.title,
+    sales: (event.ticket_types as any[]).reduce((sum, tt) => sum + tt.quantity_sold, 0),
+    revenue: (event.ticket_types as any[]).reduce((sum, tt) => sum + (tt.quantity_sold * Number(tt.price)), 0),
+  }));
+
+  const ticketTypeSales: Record<string, number> = {};
+  events.forEach(event => {
+    (event.ticket_types as any[]).forEach(tt => {
+      ticketTypeSales[tt.name] = (ticketTypeSales[tt.name] || 0) + tt.quantity_sold;
+    });
+  });
+
+  const typeDistribution = Object.entries(ticketTypeSales).map(([name, value]) => ({
+    name,
+    value,
+  }));
+
+  return {
+    eventSales,
+    typeDistribution,
+  };
+}
