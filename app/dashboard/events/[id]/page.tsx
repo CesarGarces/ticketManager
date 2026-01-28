@@ -1,4 +1,5 @@
 import { getEventById, updateEventStatus } from '@/features/events/actions';
+import { getProfile } from '@/features/auth/actions';
 import { getTicketTypesByEvent } from '@/features/tickets/actions';
 import { getOrdersByEvent } from '@/features/orders/actions';
 import { Button } from '@/components/ui/button';
@@ -11,6 +12,7 @@ import { notFound } from 'next/navigation';
 import { EventStatus } from '@/domain/types';
 import TicketTypeForm from '@/components/ticket-type-form';
 import PublishEventButton from '@/components/publish-event-button';
+import UserNav from '@/components/user-nav';
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -20,6 +22,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     notFound();
   }
 
+  const profile = await getProfile();
   const ticketTypes = await getTicketTypesByEvent(id);
   const orders = await getOrdersByEvent(id);
 
@@ -28,12 +31,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
-          <Link href="/dashboard" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
+      <header className="bg-white border-b sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <Link href="/dashboard" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 border px-3 py-1.5 rounded-lg hover:bg-gray-50 transition-colors">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Dashboard
           </Link>
+          {profile && <UserNav user={profile as any} />}
         </div>
       </header>
 

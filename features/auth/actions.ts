@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from '@/services/supabase/client';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
-export async function signIn(formData: FormData) {
+export async function signIn(formData: FormData, redirectPath: string = '/dashboard') {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
@@ -20,7 +20,7 @@ export async function signIn(formData: FormData) {
   }
 
   revalidatePath('/', 'layout');
-  redirect('/dashboard');
+  redirect(redirectPath);
 }
 
 export async function signOut() {
@@ -36,17 +36,29 @@ export async function getUser() {
   return user;
 }
 
-export async function getOrganizer() {
+export async function getProfile() {
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) return null;
 
+  // Try to find in organizers
   const { data: organizer } = await supabase
     .from('organizers')
-    .select('*')
+    .select('name, email')
     .eq('id', user.id)
     .single();
 
-  return organizer;
+  if (organizer) return { ...organizer, role: 'organizer' };
+
+  // Try to find in buyers
+  const { data: buyer } = await supabase
+    .from('buyers')
+    .select('name, email')
+    .eq('id', user.id)
+    .single();
+
+  if (buyer) return { ...buyer, role: 'buyer' };
+
+  return { email: user.email, role: 'user' };
 }

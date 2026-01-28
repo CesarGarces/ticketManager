@@ -121,7 +121,7 @@ CREATE POLICY "Anyone can view ticket types for published events" ON ticket_type
     )
   );
 
--- Orders: Organizers can view orders for their events, anyone can create orders
+-- Organizers can view orders for their events, anyone can create orders
 CREATE POLICY "Organizers can view event orders" ON orders
   FOR SELECT USING (
     EXISTS (
@@ -130,6 +130,9 @@ CREATE POLICY "Organizers can view event orders" ON orders
       AND events.organizer_id = auth.uid()
     )
   );
+
+CREATE POLICY "Users can view their own orders" ON orders
+  FOR SELECT USING (customer_email = auth.jwt() ->> 'email');
 
 CREATE POLICY "Anyone can create orders" ON orders
   FOR INSERT WITH CHECK (true);
@@ -145,5 +148,31 @@ CREATE POLICY "Organizers can view order items" ON order_items
     )
   );
 
+CREATE POLICY "Users can view their own order items" ON order_items
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM orders
+      WHERE orders.id = order_items.order_id
+      AND orders.customer_email = auth.jwt() ->> 'email'
+    )
+  );
+
 CREATE POLICY "Anyone can create order items" ON order_items
   FOR INSERT WITH CHECK (true);
+
+-- Function to update ticket stock
+CREATE OR REPLACE FUNCTION update_ticket_stock()
+RETURNS TRIGGER AS $$
+BEGIN
+  UPDATE ticket_types
+  SET quantity_sold = quantity_sold + NEW.quantity
+  WHERE id = NEW.ticket_type_id;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger to update stock on new order item
+CREATE TRIGGER trigger_update_ticket_stock
+AFTER INSERT ON order_items
+FOR EACH ROW
+EXECUTE FUNCTION update_ticket_stock();

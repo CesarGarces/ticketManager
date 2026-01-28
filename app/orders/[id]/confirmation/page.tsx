@@ -122,11 +122,16 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
         </div>
 
         <div className="text-center">
-          <Link href={`/events/${event.slug}`}>
-            <Button variant="outline">
-              Back to Event
+          <Link href="/buyer/dashboard">
+            <Button className="bg-indigo-600 hover:bg-indigo-700">
+              View My Tickets
             </Button>
           </Link>
+          <div className="mt-4">
+            <Link href={`/events/${event.slug}`} className="text-sm text-gray-500 hover:text-indigo-600 font-medium">
+              Back to Event Page
+            </Link>
+          </div>
         </div>
       </div>
     </div>

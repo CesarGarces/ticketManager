@@ -1,29 +1,37 @@
-import { getEvents } from '@/features/events/actions';
+import { getPublicEvents } from '@/features/events/actions';
+import { getProfile } from '@/features/auth/actions';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import UserNav from '@/components/user-nav';
 
 export default async function EventsPage() {
-  const events = await getEvents();
-  const publishedEvents = events.filter(e => e.status === 'published');
+  const events = await getPublicEvents();
+  const profile = await getProfile();
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b sticky top-0 z-10">
+      <header className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-xl font-bold text-blue-600">
+          <Link href="/" className="text-xl font-bold text-indigo-600">
             TicketManager
           </Link>
-          <div className="space-x-4">
-            <Link href="/login">
-              <Button variant="ghost">Login</Button>
-            </Link>
-            <Link href="/signup">
-              <Button>Sign Up</Button>
-            </Link>
+          <div className="flex items-center space-x-4">
+            {profile ? (
+              <UserNav user={profile as any} />
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost">Login</Button>
+                </Link>
+                <Link href="/signup">
+                  <Button className="bg-indigo-600 hover:bg-indigo-700">Sign Up</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -39,13 +47,13 @@ export default async function EventsPage() {
             </p>
           </div>
 
-          {publishedEvents.length === 0 ? (
+          {events.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-xl shadow-sm border">
               <p className="text-gray-500 text-lg">No events found at the moment.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {publishedEvents.map((event) => (
+              {events.map((event) => (
                 <Card key={event.id} className="overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
                   <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center p-6 text-white text-center">
                     <h3 className="text-2xl font-bold">{event.title}</h3>

@@ -1,4 +1,5 @@
 import { getPurchasesByBuyer } from '@/features/purchases/actions';
+import { getProfile } from '@/features/auth/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -6,32 +7,31 @@ import Link from 'next/link';
 import { Calendar, MapPin, Ticket, ShoppingBag, Clock } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { redirect } from 'next/navigation';
-import { createServerSupabaseClient } from '@/services/supabase/client';
+import UserNav from '@/components/user-nav';
 
 export default async function BuyerDashboardPage() {
-  const supabase = await createServerSupabaseClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const profile = await getProfile();
 
-  if (!user) {
+  if (!profile) {
     redirect('/login');
   }
 
   const purchases = await getPurchasesByBuyer();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b sticky top-0 z-10">
+    <div className="min-h-screen bg-gray-50 text-slate-900">
+      <header className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-xl font-bold text-blue-600">
+          <Link href="/" className="text-xl font-bold text-indigo-600">
             TicketManager
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/events">
-              <Button variant="ghost">Browse Events</Button>
+              <Button variant="ghost" className="text-slate-600 hover:text-indigo-600">
+                Browse Events
+              </Button>
             </Link>
-            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold">
-              {user.email?.[0].toUpperCase()}
-            </div>
+            <UserNav user={profile as any} />
           </div>
         </div>
       </header>

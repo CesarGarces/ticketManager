@@ -55,6 +55,18 @@ export async function getEvents(): Promise<Event[]> {
   return (events as Event[]) || [];
 }
 
+export async function getPublicEvents(): Promise<Event[]> {
+  const supabase = await createServerSupabaseClient();
+
+  const { data: events } = await supabase
+    .from('events')
+    .select('*')
+    .eq('status', EventStatus.PUBLISHED)
+    .order('start_date', { ascending: true });
+
+  return (events as Event[]) || [];
+}
+
 export async function getEventById(id: string): Promise<Event | null> {
   const supabase = await createServerSupabaseClient();
 

@@ -63,10 +63,10 @@ export async function createOrder(data: CreateOrderDTO): Promise<{ order?: Order
     .single();
 
   if (orderError) {
-    return { error: orderError.message };
+    return { error: `Order error: ${orderError.message}` };
   }
 
-  // Create order items
+  // Create order items (Trigger trigger_update_ticket_stock will handle stock update)
   const orderItemsWithOrderId = orderItems.map(item => ({
     ...item,
     order_id: order.id,
@@ -77,16 +77,23 @@ export async function createOrder(data: CreateOrderDTO): Promise<{ order?: Order
     .insert(orderItemsWithOrderId);
 
   if (itemsError) {
-    return { error: itemsError.message };
+    return { error: `Items error: ${itemsError.message}` };
   }
 
-  // Update ticket quantities sold
-  for (const item of data.items) {
-    const ticketType = ticketTypes.find(tt => tt.id === item.ticket_type_id) as TicketType;
-    await supabase
-      .from('ticket_types')
-      .update({ quantity_sold: ticketType.quantity_sold + item.quantity })
-      .eq('id', item.ticket_type_id);
+  // Link to buyer profile and purchases table if user is logged in
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    // Create record in purchases table for each item
+    const purchases = orderItems.map(item => ({
+      buyer_id: user.id,
+      order_id: order.id,
+      ticket_type_id: item.ticket_type_id,
+      event_id: data.event_id,
+      quantity: item.quantity,
+      payment_status: 'approved',
+    }));
+
+    await supabase.from('purchases').insert(purchases);
   }
 
   revalidatePath(`/events/${data.event_id}`);

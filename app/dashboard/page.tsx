@@ -1,4 +1,4 @@
-import { getOrganizer, signOut } from '@/features/auth/actions';
+import { getProfile } from '@/features/auth/actions';
 import { getEvents } from '@/features/events/actions';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,25 +6,19 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Calendar, MapPin, Plus } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
+import UserNav from '@/components/user-nav';
 
 export default async function DashboardPage() {
-  const organizer = await getOrganizer();
+  const profile = await getProfile();
   const events = await getEvents();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b">
+      <header className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Event Manager</h1>
+          <h1 className="text-2xl font-bold text-indigo-600">Event Manager</h1>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">
-              {organizer?.name || organizer?.email}
-            </span>
-            <form action={signOut}>
-              <Button variant="outline" size="sm">
-                Sign Out
-              </Button>
-            </form>
+            {profile && <UserNav user={profile as any} />}
           </div>
         </div>
       </header>

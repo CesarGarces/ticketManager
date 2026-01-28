@@ -56,19 +56,34 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Protect dashboard routes
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
+  const isOrganizerRoute = request.nextUrl.pathname.startsWith('/dashboard');
+  const isBuyerRoute = request.nextUrl.pathname.startsWith('/buyer');
+  const isLoginRoute = request.nextUrl.pathname === '/login';
+  const isOrganizerLoginRoute = request.nextUrl.pathname === '/organizer/login';
+
+  // Protect organizer dashboard
+  if (isOrganizerRoute && !user) {
+    return NextResponse.redirect(new URL('/organizer/login', request.url));
+  }
+
+  // Protect buyer dashboard
+  if (isBuyerRoute && !user) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
-  // Redirect to dashboard if already logged in and trying to access login
-  if (request.nextUrl.pathname === '/login' && user) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+  // Redirect if already logged in
+  if (user) {
+    if (isLoginRoute) {
+      return NextResponse.redirect(new URL('/events', request.url));
+    }
+    if (isOrganizerLoginRoute) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
+    }
   }
 
   return response;
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login'],
+  matcher: ['/dashboard/:path*', '/buyer/:path*', '/login', '/organizer/login'],
 };
