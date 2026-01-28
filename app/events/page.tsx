@@ -1,55 +1,35 @@
 import { getPublicEvents } from '@/features/events/actions';
-import { getProfile } from '@/features/auth/actions';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
-import UserNav from '@/components/user-nav';
+import { getTranslation } from '@/i18n/server';
+import NavHeader from '@/components/nav-header';
 
 export default async function EventsPage() {
   const events = await getPublicEvents();
-  const profile = await getProfile();
+  const { t } = await getTranslation();
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-xl font-bold text-indigo-600">
-            TicketManager
-          </Link>
-          <div className="flex items-center space-x-4">
-            {profile ? (
-              <UserNav user={profile as any} />
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost">Login</Button>
-                </Link>
-                <Link href="/signup">
-                  <Button className="bg-indigo-600 hover:bg-indigo-700">Sign Up</Button>
-                </Link>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
+      <NavHeader />
 
       <main className="container mx-auto px-4 py-12 flex-grow">
         <div className="max-w-6xl mx-auto">
           <div className="mb-12 text-center">
             <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
-              Explore Upcoming Events
+              {t('events.explore')}
             </h1>
             <p className="text-xl text-gray-600">
-              Find and book tickets for the best events in your area.
+              {t('events.upcoming')}
             </p>
           </div>
 
           {events.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-xl shadow-sm border">
-              <p className="text-gray-500 text-lg">No events found at the moment.</p>
+              <p className="text-gray-500 text-lg">{t('events.no_upcoming')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -84,7 +64,7 @@ export default async function EventsPage() {
                   <CardFooter className="pt-0 border-t mt-auto">
                     <Link href={`/events/${event.slug}`} className="w-full">
                       <Button className="w-full mt-4" variant="outline">
-                        View Details <ArrowRight className="ml-2 w-4 h-4" />
+                        {t('common.view_details')} <ArrowRight className="ml-2 w-4 h-4" />
                       </Button>
                     </Link>
                   </CardFooter>
@@ -97,7 +77,7 @@ export default async function EventsPage() {
 
       <footer className="bg-white border-t py-8">
         <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-          &copy; {new Date().getFullYear()} TicketManager. All rights reserved.
+          &copy; {new Date().getFullYear()} TicketManager. {t('common.all_rights_reserved')}.
         </div>
       </footer>
     </div>

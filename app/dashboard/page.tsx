@@ -6,39 +6,34 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Calendar, MapPin, Plus, TrendingUp, Users, DollarSign } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/lib/utils';
-import UserNav from '@/components/user-nav';
 import { EventSalesChart } from '@/components/dashboard/event-sales-chart';
 import { TicketDistributionChart } from '@/components/dashboard/ticket-distribution-chart';
+import { getTranslation } from '@/i18n/server';
+import NavHeader from '@/components/nav-header';
 
 export default async function DashboardPage() {
   const profile = await getProfile();
   const events = await getEvents();
   const stats = await getDashboardStats();
+  const { t } = await getTranslation();
 
   const totalSales = stats?.eventSales.reduce((acc, ev) => acc + ev.sales, 0) || 0;
   const totalRevenue = stats?.eventSales.reduce((acc, ev) => acc + ev.revenue, 0) || 0;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-indigo-600">TicketManager</Link>
-          <div className="flex items-center gap-4">
-            {profile && <UserNav user={profile as any} />}
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <NavHeader />
 
       <main className="container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900">Organizer Dashboard</h2>
-            <p className="text-gray-600 mt-1">Manage your events and track performance</p>
+            <h2 className="text-3xl font-bold text-gray-900">{t('dashboard.title')}</h2>
+            <p className="text-gray-600 mt-1">{t('dashboard.description')}</p>
           </div>
           <Link href="/dashboard/events/new">
             <Button size="lg" className="bg-indigo-600 hover:bg-indigo-700">
               <Plus className="w-4 h-4 mr-2" />
-              Create Event
+              {t('dashboard.create_event')}
             </Button>
           </Link>
         </div>
@@ -47,7 +42,7 @@ export default async function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Tickets Sold</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard.total_sold')}</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -57,7 +52,7 @@ export default async function DashboardPage() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard.total_revenue')}</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
@@ -67,12 +62,12 @@ export default async function DashboardPage() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Active Events</CardTitle>
+              <CardTitle className="text-sm font-medium">{t('dashboard.active_events')}</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{events.filter(e => e.status === 'published').length}</div>
-              <p className="text-xs text-muted-foreground">{events.length} total events</p>
+              <p className="text-xs text-muted-foreground">{events.length} {t('dashboard.my_events').toLowerCase()}</p>
             </CardContent>
           </Card>
         </div>
@@ -102,7 +97,7 @@ export default async function DashboardPage() {
         )}
 
         <div className="mb-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-6">Recent Events</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-6">{t('dashboard.recent_events')}</h3>
           {events.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-16">

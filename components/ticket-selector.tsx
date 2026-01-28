@@ -18,6 +18,8 @@ import { ShoppingCart } from 'lucide-react';
 import { TicketType } from '@/domain/types';
 import { formatCurrency } from '@/lib/utils';
 
+import { useTranslation } from '@/i18n/context';
+
 interface TicketSelectorProps {
   eventId: string;
   ticketType: TicketType;
@@ -30,6 +32,7 @@ export default function TicketSelector({ eventId, ticketType, maxQuantity }: Tic
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
@@ -64,19 +67,19 @@ export default function TicketSelector({ eventId, ticketType, maxQuantity }: Tic
       <DialogTrigger asChild>
         <Button>
           <ShoppingCart className="w-4 h-4 mr-2" />
-          Buy Tickets
+          {t('events.buy_tickets')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Purchase {ticketType.name}</DialogTitle>
+          <DialogTitle>{t('events.purchase_ticket')} {ticketType.name}</DialogTitle>
           <DialogDescription>
-            Complete your ticket purchase
+            {t('events.complete_purchase_desc')}
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="quantity">Quantity</Label>
+            <Label htmlFor="quantity">{t('buyer.quantity')}</Label>
             <select
               id="quantity"
               value={quantity}
@@ -85,7 +88,7 @@ export default function TicketSelector({ eventId, ticketType, maxQuantity }: Tic
             >
               {Array.from({ length: maxQuantity }, (_, i) => i + 1).map((num) => (
                 <option key={num} value={num}>
-                  {num} {num === 1 ? 'ticket' : 'tickets'}
+                  {num} {num === 1 ? t('events.ticket') : t('events.tickets_count')}
                 </option>
               ))}
             </select>
@@ -93,13 +96,13 @@ export default function TicketSelector({ eventId, ticketType, maxQuantity }: Tic
 
           <div className="bg-gray-50 p-4 rounded-lg">
             <div className="flex justify-between items-center text-lg font-semibold">
-              <span>Total</span>
+              <span>{t('orders.total')}</span>
               <span>{formatCurrency(total, ticketType.currency)}</span>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="customer_name">Full Name *</Label>
+            <Label htmlFor="customer_name">{t('common.name')} *</Label>
             <Input
               id="customer_name"
               name="customer_name"
@@ -109,7 +112,7 @@ export default function TicketSelector({ eventId, ticketType, maxQuantity }: Tic
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="customer_email">Email *</Label>
+            <Label htmlFor="customer_email">{t('common.email')} *</Label>
             <Input
               id="customer_email"
               name="customer_email"
@@ -126,19 +129,19 @@ export default function TicketSelector({ eventId, ticketType, maxQuantity }: Tic
           )}
 
           <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded text-sm">
-            <strong>Note:</strong> This is a simulated purchase. No payment will be processed.
+            <strong>{t('common.status')}:</strong> {t('events.simulated_notice')}
           </div>
 
           <div className="flex gap-2">
             <Button type="submit" disabled={loading} className="flex-1">
-              {loading ? 'Processing...' : 'Complete Purchase'}
+              {loading ? t('events.processing') : t('events.complete_purchase_btn')}
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
           </div>
         </form>

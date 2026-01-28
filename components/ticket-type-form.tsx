@@ -17,6 +17,8 @@ import { Plus } from 'lucide-react';
 import { Currency } from '@/domain/types';
 import { useRouter } from 'next/navigation';
 
+import { useTranslation } from '@/i18n/context';
+
 interface TicketTypeFormProps {
   eventId: string;
 }
@@ -26,6 +28,7 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
@@ -57,39 +60,39 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
       <DialogTrigger asChild>
         <Button variant="outline">
           <Plus className="w-4 h-4 mr-2" />
-          Add Ticket Type
+          {t('dashboard.add_ticket_type')}
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Ticket Type</DialogTitle>
+          <DialogTitle>{t('dashboard.add_ticket_type')}</DialogTitle>
           <DialogDescription>
-            Create a new ticket type with pricing and inventory
+            {t('dashboard.ticket_type_desc')}
           </DialogDescription>
         </DialogHeader>
         <form action={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Ticket Name *</Label>
+            <Label htmlFor="name">{t('dashboard.ticket_name')} *</Label>
             <Input
               id="name"
               name="name"
-              placeholder="General Admission"
+              placeholder={t('dashboard.ticket_name_placeholder')}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t('dashboard.ticket_desc_label')}</Label>
             <Input
               id="description"
               name="description"
-              placeholder="Full event access"
+              placeholder={t('dashboard.ticket_desc_placeholder')}
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="price">Price *</Label>
+              <Label htmlFor="price">{t('dashboard.price')} *</Label>
               <Input
                 id="price"
                 name="price"
@@ -102,7 +105,7 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency *</Label>
+              <Label htmlFor="currency">{t('dashboard.currency')} *</Label>
               <select
                 id="currency"
                 name="currency"
@@ -117,13 +120,13 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="quantity_total">Total Quantity *</Label>
+            <Label htmlFor="quantity_total">{t('dashboard.total_quantity')} *</Label>
             <Input
               id="quantity_total"
               name="quantity_total"
               type="number"
               min="1"
-              placeholder="100"
+              placeholder={t('dashboard.quantity_placeholder')}
               required
             />
           </div>
@@ -136,14 +139,14 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
 
           <div className="flex gap-2">
             <Button type="submit" disabled={loading} className="flex-1">
-              {loading ? 'Creating...' : 'Create Ticket Type'}
+              {loading ? t('dashboard.creating') : t('dashboard.create_ticket_type_btn')}
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={() => setOpen(false)}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
           </div>
         </form>

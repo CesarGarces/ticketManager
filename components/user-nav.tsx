@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { signOut } from '@/features/auth/actions';
 import Link from 'next/link';
 
+import { useTranslation } from '@/i18n/context';
+
 interface UserNavProps {
   user: {
     name?: string | null;
@@ -17,6 +19,7 @@ interface UserNavProps {
 export default function UserNav({ user }: UserNavProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { t, locale, changeLanguage } = useTranslation();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -40,7 +43,7 @@ export default function UserNav({ user }: UserNavProps) {
         </div>
         <div className="hidden sm:flex flex-col items-start text-xs">
           <span className="font-semibold text-gray-900 leading-none mb-0.5 capitalize">
-            {user.name || 'User'}
+            {user.name || t('common.account')}
           </span>
         </div>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
@@ -53,18 +56,19 @@ export default function UserNav({ user }: UserNavProps) {
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start text-sm hover:bg-gray-50 rounded-lg">
                   <LayoutDashboard className="w-4 h-4 mr-2 text-gray-400" />
-                  Dashboard
+                  {t('common.dashboard')}
                 </Button>
               </Link>
             ) : (
               <Link href="/buyer/dashboard" onClick={() => setIsOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start text-sm hover:bg-gray-50 rounded-lg">
                   <Ticket className="w-4 h-4 mr-2 text-gray-400" />
-                  My Tickets
+                  {t('common.my_tickets')}
                 </Button>
               </Link>
             )}
           </div>
+
 
           <div className="p-1">
             <Button
@@ -76,7 +80,7 @@ export default function UserNav({ user }: UserNavProps) {
               }}
             >
               <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
+              {t('common.signout')}
             </Button>
           </div>
         </div>

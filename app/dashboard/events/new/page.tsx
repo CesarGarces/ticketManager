@@ -9,11 +9,13 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { useTranslation } from '@/i18n/context';
 
 export default function NewEventPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
@@ -43,7 +45,7 @@ export default function NewEventPage() {
         <div className="container mx-auto px-4 py-4">
           <Link href="/dashboard" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
+            {t('dashboard.back_to_dashboard')}
           </Link>
         </div>
       </header>
@@ -51,47 +53,47 @@ export default function NewEventPage() {
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <Card>
           <CardHeader>
-            <CardTitle>Create New Event</CardTitle>
+            <CardTitle>{t('dashboard.create_new_event')}</CardTitle>
             <CardDescription>
-              Fill in the details to create your event. You can add ticket types after creation.
+              {t('dashboard.fill_details')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form action={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="title">Event Title *</Label>
+                <Label htmlFor="title">{t('dashboard.event_title')} *</Label>
                 <Input
                   id="title"
                   name="title"
-                  placeholder="Tech Conference 2026"
+                  placeholder={t('dashboard.title_placeholder')}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description *</Label>
+                <Label htmlFor="description">{t('dashboard.description_label')} *</Label>
                 <textarea
                   id="description"
                   name="description"
                   className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Describe your event..."
+                  placeholder={t('dashboard.description_placeholder')}
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="location">Location *</Label>
+                <Label htmlFor="location">{t('dashboard.location_label')} *</Label>
                 <Input
                   id="location"
                   name="location"
-                  placeholder="San Francisco Convention Center"
+                  placeholder={t('dashboard.location_placeholder')}
                   required
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="start_date">Start Date & Time *</Label>
+                  <Label htmlFor="start_date">{t('dashboard.start_date')} *</Label>
                   <Input
                     id="start_date"
                     name="start_date"
@@ -101,7 +103,7 @@ export default function NewEventPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="end_date">End Date & Time *</Label>
+                  <Label htmlFor="end_date">{t('dashboard.end_date')} *</Label>
                   <Input
                     id="end_date"
                     name="end_date"
@@ -119,11 +121,11 @@ export default function NewEventPage() {
 
               <div className="flex gap-4">
                 <Button type="submit" disabled={loading} className="flex-1">
-                  {loading ? 'Creating...' : 'Create Event'}
+                  {loading ? t('dashboard.creating') : t('dashboard.create_event')}
                 </Button>
                 <Link href="/dashboard">
                   <Button type="button" variant="outline">
-                    Cancel
+                    {t('common.cancel')}
                   </Button>
                 </Link>
               </div>

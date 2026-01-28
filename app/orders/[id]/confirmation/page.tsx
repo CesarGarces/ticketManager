@@ -7,10 +7,12 @@ import Link from 'next/link';
 import { CheckCircle, Calendar, MapPin, Mail, User } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { notFound } from 'next/navigation';
+import { getTranslation } from '@/i18n/server';
 
 export default async function OrderConfirmationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const orderData = await getOrderById(id);
+  const { t } = await getTranslation();
 
   if (!orderData) {
     notFound();
@@ -30,9 +32,9 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('orders.confirmed')}</h1>
           <p className="text-gray-600">
-            Your tickets have been reserved. Check your email for confirmation.
+            {t('orders.reserved_desc')}
           </p>
         </div>
 
@@ -40,10 +42,10 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
           <CardHeader>
             <div className="flex justify-between items-start">
               <div>
-                <CardTitle>Order Details</CardTitle>
-                <CardDescription>Order #{order.id.slice(0, 8)}</CardDescription>
+                <CardTitle>{t('common.order_details')}</CardTitle>
+                <CardDescription>{t('buyer.order_id')} #{order.id.slice(0, 8)}</CardDescription>
               </div>
-              <Badge>{order.status}</Badge>
+              <Badge className="capitalize">{order.status}</Badge>
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -65,14 +67,14 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
             <div className="flex items-start gap-3">
               <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
               <div>
-                <div className="font-medium">Event Date</div>
+                <div className="font-medium">{t('orders.event_date')}</div>
                 <div className="text-sm text-gray-600">{formatDate(event.start_date)}</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <MapPin className="w-5 h-5 text-gray-400 mt-0.5" />
               <div>
-                <div className="font-medium">Location</div>
+                <div className="font-medium">{t('events.location')}</div>
                 <div className="text-sm text-gray-600">{event.location}</div>
               </div>
             </div>
@@ -81,7 +83,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle>Tickets</CardTitle>
+            <CardTitle>{t('orders.tickets')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -89,20 +91,20 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
                 <div key={item.id} className="flex justify-between items-center py-2 border-b last:border-0">
                   <div>
                     <div className="font-medium">{item.ticket_type.name}</div>
-                    <div className="text-sm text-gray-600">Quantity: {item.quantity}</div>
+                    <div className="text-sm text-gray-600">{t('buyer.quantity')}: {item.quantity}</div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium">
                       {formatCurrency(Number(item.subtotal), order.currency)}
                     </div>
                     <div className="text-sm text-gray-600">
-                      {formatCurrency(Number(item.unit_price), order.currency)} each
+                      {formatCurrency(Number(item.unit_price), order.currency)} {t('orders.each')}
                     </div>
                   </div>
                 </div>
               ))}
               <div className="flex justify-between items-center pt-3 text-lg font-bold">
-                <span>Total</span>
+                <span>{t('orders.total')}</span>
                 <span>{formatCurrency(Number(order.total_amount), order.currency)}</span>
               </div>
             </div>
@@ -113,9 +115,9 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
           <div className="flex items-start gap-2">
             <Mail className="w-5 h-5 mt-0.5 flex-shrink-0" />
             <div className="text-sm">
-              <strong>Confirmation email sent!</strong>
+              <strong>{t('orders.email_sent')}</strong>
               <p className="mt-1">
-                We've sent your tickets and event details to {order.customer_email}
+                {t('orders.sent_desc_start')} {order.customer_email}
               </p>
             </div>
           </div>
@@ -124,12 +126,12 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
         <div className="text-center">
           <Link href="/buyer/dashboard">
             <Button className="bg-indigo-600 hover:bg-indigo-700">
-              View My Tickets
+              {t('orders.view_my_tickets')}
             </Button>
           </Link>
           <div className="mt-4">
             <Link href={`/events/${event.slug}`} className="text-sm text-gray-500 hover:text-indigo-600 font-medium">
-              Back to Event Page
+              {t('orders.back_to_event')}
             </Link>
           </div>
         </div>

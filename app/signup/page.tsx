@@ -7,10 +7,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
+import { useTranslation } from '@/i18n/context';
 
 export default function SignUpPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
@@ -26,15 +28,15 @@ export default function SignUpPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4">
       <Card className="w-full max-w-md shadow-xl border-t-4 border-t-blue-600">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
+          <CardTitle className="text-2xl font-bold">{t('auth.signup_title')}</CardTitle>
           <CardDescription>
-            Join us to start buying tickets for your favorite events
+            {t('auth.signup_subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">{t('common.name')}</Label>
               <Input
                 id="name"
                 name="name"
@@ -43,7 +45,7 @@ export default function SignUpPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('common.email')}</Label>
               <Input
                 id="email"
                 name="email"
@@ -53,7 +55,7 @@ export default function SignUpPage() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t('common.password')}</Label>
               <Input
                 id="password"
                 name="password"
@@ -69,12 +71,12 @@ export default function SignUpPage() {
               </div>
             )}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? 'Creating account...' : 'Create Account'}
+              {loading ? t('auth.creating_account') : t('common.signup')}
             </Button>
             <p className="text-center text-sm text-gray-500">
-              Already have an account?{' '}
+              {t('auth.already_account')}{' '}
               <Link href="/login" className="text-blue-600 hover:underline font-medium">
-                Log in
+                {t('common.login')}
               </Link>
             </p>
           </form>

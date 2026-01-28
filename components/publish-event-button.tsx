@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { EventStatus } from '@/domain/types';
 import { useRouter } from 'next/navigation';
 
+import { useTranslation } from '@/i18n/context';
+
 interface PublishEventButtonProps {
   eventId: string;
 }
@@ -13,6 +15,7 @@ interface PublishEventButtonProps {
 export default function PublishEventButton({ eventId }: PublishEventButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   async function handlePublish() {
     setLoading(true);
@@ -23,7 +26,7 @@ export default function PublishEventButton({ eventId }: PublishEventButtonProps)
 
   return (
     <Button onClick={handlePublish} disabled={loading} size="lg">
-      {loading ? 'Publishing...' : 'Publish Event'}
+      {loading ? t('dashboard.publishing') : t('dashboard.publish_event')}
     </Button>
   );
 }

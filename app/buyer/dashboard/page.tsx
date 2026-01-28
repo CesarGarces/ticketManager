@@ -7,10 +7,12 @@ import Link from 'next/link';
 import { Calendar, MapPin, Ticket, ShoppingBag, Clock } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { redirect } from 'next/navigation';
-import UserNav from '@/components/user-nav';
+import { getTranslation } from '@/i18n/server';
+import NavHeader from '@/components/nav-header';
 
 export default async function BuyerDashboardPage() {
   const profile = await getProfile();
+  const { t } = await getTranslation();
 
   if (!profile) {
     redirect('/login');
@@ -19,32 +21,18 @@ export default async function BuyerDashboardPage() {
   const purchases = await getPurchasesByBuyer();
 
   return (
-    <div className="min-h-screen bg-gray-50 text-slate-900">
-      <header className="bg-white border-b sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/" className="text-xl font-bold text-indigo-600">
-            TicketManager
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/events">
-              <Button variant="ghost" className="text-slate-600 hover:text-indigo-600">
-                Browse Events
-              </Button>
-            </Link>
-            <UserNav user={profile as any} />
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50 text-slate-900 flex flex-col">
+      <NavHeader />
 
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8 flex justify-between items-end">
             <div>
-              <h1 className="text-3xl font-bold">My Tickets</h1>
-              <p className="text-gray-600">Manage your event bookings and history</p>
+              <h1 className="text-3xl font-bold">{t('buyer.dashboard_title')}</h1>
+              <p className="text-gray-600">{t('buyer.manage_bookings')}</p>
             </div>
             <div className="text-sm bg-blue-50 text-blue-700 px-4 py-2 rounded-full font-medium">
-              {purchases.length} total orders
+              {purchases.length} {t('buyer.total_orders')}
             </div>
           </div>
 
@@ -52,10 +40,10 @@ export default async function BuyerDashboardPage() {
             <Card className="text-center py-16 border-dashed">
               <CardContent>
                 <ShoppingBag className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No tickets yet</h3>
-                <p className="text-gray-500 mb-6">You haven't purchased any tickets yet. Explore events to find something you'll love!</p>
+                <h3 className="text-lg font-semibold mb-2">{t('buyer.no_tickets')}</h3>
+                <p className="text-gray-500 mb-6">{t('buyer.no_tickets_desc')}</p>
                 <Link href="/events">
-                  <Button>Browse events</Button>
+                  <Button>{t('common.browse_events')}</Button>
                 </Link>
               </CardContent>
             </Card>
@@ -91,14 +79,14 @@ export default async function BuyerDashboardPage() {
                           <div className="flex items-start gap-2">
                             <Calendar className="w-4 h-4 text-gray-400 mt-1" />
                             <div>
-                              <p className="text-xs text-gray-400 font-medium">Date & Time</p>
+                              <p className="text-xs text-gray-400 font-medium">{t('events.date_time')}</p>
                               <p className="text-sm font-medium">{formatDate(purchase.event?.start_date)}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <MapPin className="w-4 h-4 text-gray-400 mt-1" />
                             <div>
-                              <p className="text-xs text-gray-400 font-medium">Location</p>
+                              <p className="text-xs text-gray-400 font-medium">{t('events.location')}</p>
                               <p className="text-sm font-medium">{purchase.event?.location}</p>
                             </div>
                           </div>
@@ -107,14 +95,14 @@ export default async function BuyerDashboardPage() {
                           <div className="flex items-start gap-2">
                             <Ticket className="w-4 h-4 text-gray-400 mt-1" />
                             <div>
-                              <p className="text-xs text-gray-400 font-medium">Quantity</p>
-                              <p className="text-sm font-medium">{purchase.quantity} ticket(s)</p>
+                              <p className="text-xs text-gray-400 font-medium">{t('buyer.quantity')}</p>
+                              <p className="text-sm font-medium">{purchase.quantity} {t('buyer.ticket_s')}</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-2">
                             <Clock className="w-4 h-4 text-gray-400 mt-1" />
                             <div>
-                              <p className="text-xs text-gray-400 font-medium">Order Date</p>
+                              <p className="text-xs text-gray-400 font-medium">{t('buyer.order_date')}</p>
                               <p className="text-sm font-medium">{formatDate(purchase.purchase_date)}</p>
                             </div>
                           </div>
@@ -123,13 +111,13 @@ export default async function BuyerDashboardPage() {
 
                       <div className="mt-6 pt-4 border-t flex items-center justify-between">
                         <div>
-                          <p className="text-xs text-gray-400 font-medium">Total Paid</p>
+                          <p className="text-xs text-gray-400 font-medium">{t('buyer.total_paid')}</p>
                           <p className="text-lg font-bold">
                             {formatCurrency(Number(purchase.ticket_type?.price) * purchase.quantity, purchase.ticket_type?.currency)}
                           </p>
                         </div>
                         <Link href={`/events/${purchase.event?.slug}`}>
-                          <Button variant="ghost" size="sm">Event Details</Button>
+                          <Button variant="ghost" size="sm">{t('common.view_details')}</Button>
                         </Link>
                       </div>
                     </CardContent>
