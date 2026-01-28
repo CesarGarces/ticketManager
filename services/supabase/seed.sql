@@ -49,8 +49,8 @@ INSERT INTO ticket_types (event_id, name, description, price, currency, quantity
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'Early Bird',
     'Limited early bird pricing - save 40%!',
-    299.00,
-    'USD',
+    500000.00,
+    'COP',
     100,
     75
   ),
@@ -58,8 +58,8 @@ INSERT INTO ticket_types (event_id, name, description, price, currency, quantity
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'General Admission',
     'Full conference access including all sessions and networking events',
-    499.00,
-    'USD',
+    850000.00,
+    'COP',
     500,
     120
   ),
@@ -67,8 +67,8 @@ INSERT INTO ticket_types (event_id, name, description, price, currency, quantity
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'VIP Pass',
     'Premium access with exclusive workshops, VIP lounge, and speaker meet & greet',
-    999.00,
-    'USD',
+    1500000.00,
+    'COP',
     50,
     12
   );
@@ -79,8 +79,8 @@ INSERT INTO ticket_types (event_id, name, description, price, currency, quantity
     'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
     'Standard Entry',
     'Includes entry, welcome drink, and networking access',
-    49.00,
-    'USD',
+    120000.00,
+    'COP',
     200,
     85
   ),
@@ -88,8 +88,8 @@ INSERT INTO ticket_types (event_id, name, description, price, currency, quantity
     'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
     'Investor Pass',
     'Priority access with dedicated investor networking area',
-    99.00,
-    'USD',
+    250000.00,
+    'COP',
     30,
     18
   );
@@ -100,8 +100,8 @@ INSERT INTO ticket_types (event_id, name, description, price, currency, quantity
     'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
     'Workshop Ticket',
     'Full day workshop with materials and lunch included',
-    149.00,
-    'USD',
+    350000.00,
+    'COP',
     30,
     0
   );

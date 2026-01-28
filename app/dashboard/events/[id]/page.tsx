@@ -65,7 +65,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {formatCurrency(totalRevenue, ticketTypes[0]?.currency || 'USD')}
+                  {formatCurrency(totalRevenue, ticketTypes[0]?.currency || 'COP')}
                 </div>
               </CardContent>
             </Card>

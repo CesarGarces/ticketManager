@@ -67,7 +67,5 @@ export enum OrderStatus {
 }
 
 export enum Currency {
-  USD = 'USD',
-  EUR = 'EUR',
-  GBP = 'GBP',
+  COP = 'COP',
 }

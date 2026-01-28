@@ -39,7 +39,7 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
       name: formData.get('name') as string,
       description: formData.get('description') as string,
       price: parseFloat(formData.get('price') as string),
-      currency: (formData.get('currency') as Currency) || Currency.USD,
+      currency: (formData.get('currency') as Currency) || Currency.COP,
       quantity_total: parseInt(formData.get('quantity_total') as string),
     };
 
@@ -97,9 +97,9 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
                 id="price"
                 name="price"
                 type="number"
-                step="0.01"
+                step="500"
                 min="0"
-                placeholder="49.99"
+                placeholder="50000"
                 required
               />
             </div>
@@ -112,9 +112,7 @@ export default function TicketTypeForm({ eventId }: TicketTypeFormProps) {
                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 required
               >
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
-                <option value="GBP">GBP</option>
+                <option value="COP">COP</option>
               </select>
             </div>
           </div>

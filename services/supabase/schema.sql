@@ -1,5 +1,12 @@
 -- Event Management Platform Database Schema
 
+-- Clean up existing tables
+DROP TABLE IF EXISTS order_items CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS ticket_types CASCADE;
+DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE IF EXISTS organizers CASCADE;
+
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
@@ -33,7 +40,7 @@ CREATE TABLE ticket_types (
   name TEXT NOT NULL,
   description TEXT,
   price DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
-  currency TEXT NOT NULL DEFAULT 'USD' CHECK (currency IN ('USD', 'EUR', 'GBP')),
+  currency TEXT NOT NULL DEFAULT 'COP' CHECK (currency IN ('COP')),
   quantity_total INTEGER NOT NULL CHECK (quantity_total > 0),
   quantity_sold INTEGER NOT NULL DEFAULT 0 CHECK (quantity_sold >= 0),
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -47,7 +54,7 @@ CREATE TABLE orders (
   customer_name TEXT NOT NULL,
   customer_email TEXT NOT NULL,
   total_amount DECIMAL(10, 2) NOT NULL CHECK (total_amount >= 0),
-  currency TEXT NOT NULL DEFAULT 'USD' CHECK (currency IN ('USD', 'EUR', 'GBP')),
+  currency TEXT NOT NULL DEFAULT 'COP' CHECK (currency IN ('COP')),
   status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'completed', 'cancelled')),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
