@@ -19,7 +19,7 @@ export default function LoginPage() {
     setLoading(true);
     setError('');
     // For clients, we redirect to events or buyer dashboard
-    const result = await signIn(formData, '/events');
+    const result = await signIn(formData);
     if (result?.error) {
       setError(result.error);
       setLoading(false);

@@ -7,19 +7,22 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
-
-const chartConfig = {
-  sales: {
-    label: "Sales",
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig
+import { useTranslation } from "@/i18n/context"
 
 interface EventSalesChartProps {
   data: { name: string; sales: number }[]
 }
 
 export function EventSalesChart({ data }: EventSalesChartProps) {
+  const { t } = useTranslation();
+
+  const chartConfig = {
+    sales: {
+      label: t('dashboard.chart_sales_label'),
+      color: "hsl(var(--chart-1))",
+    },
+  } satisfies ChartConfig
+
   return (
     <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
       <BarChart accessibilityLayer data={data}>

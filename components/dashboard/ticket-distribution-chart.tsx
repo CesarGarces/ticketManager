@@ -7,6 +7,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart"
+import { useTranslation } from "@/i18n/context"
 
 const COLORS = [
   "hsl(var(--chart-1))",
@@ -23,6 +24,8 @@ interface TicketDistributionChartProps {
 const chartConfig = {} satisfies ChartConfig
 
 export function TicketDistributionChart({ data }: TicketDistributionChartProps) {
+  const { t } = useTranslation();
+
   return (
     <ChartContainer config={chartConfig} className="min-h-[300px] w-full">
       <PieChart>
@@ -45,7 +48,7 @@ export function TicketDistributionChart({ data }: TicketDistributionChartProps) 
               return (
                 <div className="bg-white p-2 border rounded-lg shadow-sm text-xs">
                   <p className="font-semibold">{payload[0].name}</p>
-                  <p className="text-muted-foreground">{payload[0].value} tickets sold</p>
+                  <p className="text-muted-foreground">{payload[0].value} {t('dashboard.chart_tickets_sold')}</p>
                 </div>
               )
             }

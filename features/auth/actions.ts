@@ -4,13 +4,13 @@ import { createServerSupabaseClient } from '@/services/supabase/client';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 
-export async function signIn(formData: FormData, redirectPath: string = '/dashboard') {
+export async function signIn(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
   const supabase = await createServerSupabaseClient();
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error, data: { user } } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
@@ -19,8 +19,24 @@ export async function signIn(formData: FormData, redirectPath: string = '/dashbo
     return { error: error.message };
   }
 
-  revalidatePath('/', 'layout');
-  redirect(redirectPath);
+  if (user) {
+    // Detect role to redirect correctly
+    const { data: organizer } = await supabase
+      .from('organizers')
+      .select('id')
+      .eq('id', user.id)
+      .single();
+
+    revalidatePath('/', 'layout');
+    
+    if (organizer) {
+      redirect('/dashboard');
+    } else {
+      redirect('/events');
+    }
+  }
+
+  redirect('/events');
 }
 
 export async function signOut() {

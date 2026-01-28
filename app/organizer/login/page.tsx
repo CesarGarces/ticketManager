@@ -14,7 +14,7 @@ export default function OrganizerLoginPage() {
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     setError('');
-    const result = await signIn(formData, '/dashboard');
+    const result = await signIn(formData);
     if (result?.error) {
       setError(result.error);
       setLoading(false);

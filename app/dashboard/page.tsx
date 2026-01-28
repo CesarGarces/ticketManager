@@ -47,7 +47,7 @@ export default async function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{totalSales}</div>
-              <p className="text-xs text-muted-foreground">+20% from last month</p>
+              <p className="text-xs text-muted-foreground">+20% {t('dashboard.stats_from_last_month')}</p>
             </CardContent>
           </Card>
           <Card>
@@ -57,7 +57,7 @@ export default async function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{formatCurrency(totalRevenue)}</div>
-              <p className="text-xs text-muted-foreground">+15% from last month</p>
+              <p className="text-xs text-muted-foreground">+15% {t('dashboard.stats_from_last_month')}</p>
             </CardContent>
           </Card>
           <Card>
@@ -77,8 +77,8 @@ export default async function DashboardPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <Card className="col-span-1">
               <CardHeader>
-                <CardTitle>Event Sales</CardTitle>
-                <CardDescription>Tickets sold per event</CardDescription>
+                <CardTitle>{t('dashboard.event_sales')}</CardTitle>
+                <CardDescription>{t('dashboard.tickets_per_event')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <EventSalesChart data={stats.eventSales} />
@@ -86,8 +86,8 @@ export default async function DashboardPage() {
             </Card>
             <Card className="col-span-1">
               <CardHeader>
-                <CardTitle>Ticket Distribution</CardTitle>
-                <CardDescription>Sales by ticket category</CardDescription>
+                <CardTitle>{t('dashboard.ticket_distribution')}</CardTitle>
+                <CardDescription>{t('dashboard.sales_by_category')}</CardDescription>
               </CardHeader>
               <CardContent>
                 <TicketDistributionChart data={stats.typeDistribution} />
@@ -102,12 +102,12 @@ export default async function DashboardPage() {
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-16">
                 <Calendar className="w-16 h-16 text-gray-400 mb-4" />
-                <h3 className="text-xl font-semibold mb-2">No events yet</h3>
-                <p className="text-gray-600 mb-6">Create your first event to get started</p>
+                <h3 className="text-xl font-semibold mb-2">{t('dashboard.no_events')}</h3>
+                <p className="text-gray-600 mb-6">{t('dashboard.create_first')}</p>
                 <Link href="/dashboard/events/new">
                   <Button>
                     <Plus className="w-4 h-4 mr-2" />
-                    Create Event
+                    {t('dashboard.create_event')}
                   </Button>
                 </Link>
               </CardContent>
