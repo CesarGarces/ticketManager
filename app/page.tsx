@@ -10,6 +10,8 @@ import NavHeader from '@/components/nav-header';
 import { EventFilters } from '@/components/event-filters';
 import { getEventCategories } from '@/features/events/actions';
 
+import { FeaturedEventHero } from '@/components/featured-event-hero';
+
 export default async function HomePage({
   searchParams
 }: {
@@ -20,12 +22,32 @@ export default async function HomePage({
   const events = await getPublicEvents({ search, categoryId: category });
   const { t } = await getTranslation();
 
+  // Simple logic to pick a featured event: first one with an image
+  // In a real app, this would be a specific query or flag
+  const featuredEvent = !search && !category ? events.find(e => e.image_url) : null;
+  const eventsToList = featuredEvent ? events.filter(e => e.id !== featuredEvent.id) : events;
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <NavHeader />
 
       <main className="container mx-auto px-4 py-12 flex-grow">
         <div className="max-w-6xl mx-auto">
+
+          {featuredEvent && featuredEvent.image_url && (
+            <FeaturedEventHero event={{
+              id: featuredEvent.id,
+              title: featuredEvent.title,
+              city: featuredEvent.location,
+              date: featuredEvent.start_date,
+              imageUrl: featuredEvent.image_url,
+              category: categories.find(c => c.id === featuredEvent.category_id)?.name || 'Event',
+              slug: featuredEvent.slug
+            }}
+              ctaLabel={t('events.get_tickets')}
+            />
+          )}
+
           <div className="mb-12 text-center text-slate-900">
             <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-4">
               {t('events.explore')}
@@ -37,7 +59,7 @@ export default async function HomePage({
 
           <EventFilters categories={categories} />
 
-          {events.length === 0 ? (
+          {eventsToList.length === 0 ? (
             <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-indigo-50">
               <p className="text-gray-500 text-lg">
                 {(search || category) ? t('events.no_results') || 'No se encontraron eventos para esta búsqueda.' : t('events.no_upcoming')}
@@ -52,7 +74,7 @@ export default async function HomePage({
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-slate-900">
-              {events.map((event) => (
+              {eventsToList.map((event) => (
                 <Card key={event.id} className="overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 border-indigo-50 group">
                   <div className="h-48 relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center transition-transform group-hover:scale-[1.02]">
                     {event.image_url ? (
