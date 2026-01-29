@@ -93,12 +93,17 @@ export async function createOrder(data: CreateOrderDTO): Promise<{ order?: Order
       payment_status: 'approved',
     }));
 
-    const { error: purchaseError } = await supabase.from('purchases').insert(purchases);
+    console.log('[createOrder] Attempting to insert purchases:', purchases);
+
+    const { data: insertedPurchases, error: purchaseError } = await supabase
+      .from('purchases')
+      .insert(purchases)
+      .select();
 
     if (purchaseError) {
-      console.error('Error creating purchases:', purchaseError);
-      // We don't fail the order creation here as the payment is already "processed" in this simulation
-      // but in a real scenario we might want to handle this more gracefully
+      console.error('[createOrder] Error creating purchases:', purchaseError);
+    } else {
+      console.log('[createOrder] Successfully inserted purchases:', insertedPurchases);
     }
   }
 

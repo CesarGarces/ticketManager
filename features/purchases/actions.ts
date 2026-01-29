@@ -129,7 +129,9 @@ export async function getPurchasesByBuyer() {
 
   if (!user) return [];
 
-  const { data: purchases } = await supabase
+  console.log('[getPurchasesByBuyer] Fetching for user:', user.id);
+
+  const { data: purchases, error } = await supabase
     .from('purchases')
     .select(`
       *,
@@ -138,6 +140,12 @@ export async function getPurchasesByBuyer() {
     `)
     .eq('buyer_id', user.id)
     .order('purchase_date', { ascending: false });
+
+  if (error) {
+    console.error('[getPurchasesByBuyer] Error fetching purchases:', error);
+  } else {
+    console.log('[getPurchasesByBuyer] Found purchases:', purchases?.length);
+  }
 
   return purchases || [];
 }
