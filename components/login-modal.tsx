@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { signIn } from '@/features/auth/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { X } from 'lucide-react';
 import { useTranslation } from '@/i18n/context';
+import { useClickOutside } from '@/hooks/useClickOutside';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -18,7 +19,18 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose, onOpenSignup }: LoginModalProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [shouldRender, setShouldRender] = useState(isOpen);
   const { t } = useTranslation();
+  const modalRef = useClickOutside(onClose);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true);
+    } else {
+      const timer = setTimeout(() => setShouldRender(false), 500);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
@@ -30,11 +42,13 @@ export default function LoginModal({ isOpen, onClose, onOpenSignup }: LoginModal
     }
   }
 
-  if (!isOpen) return null;
+  if (!shouldRender) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-md shadow-2xl border-t-4 border-t-indigo-600 relative">
+    <div className={`fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      }`}>
+      <Card ref={modalRef} className={`w-full max-w-md shadow-2xl border-t-4 border-t-indigo-600 relative transition-all duration-500 ${isOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+        }`}>
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full transition-colors"

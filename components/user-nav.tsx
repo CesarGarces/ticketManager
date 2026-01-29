@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { User, LogOut, ChevronDown, LayoutDashboard, Ticket } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signOut } from '@/features/auth/actions';
 import Link from 'next/link';
-
 import { useTranslation } from '@/i18n/context';
+import { useClickOutside } from '@/hooks/useClickOutside';
 import { USER_TYPE } from '@/lib/constants';
 
 interface UserNavProps {
@@ -19,18 +19,8 @@ interface UserNavProps {
 
 export default function UserNav({ user }: UserNavProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useClickOutside(() => setIsOpen(false));
   const { t, locale, changeLanguage } = useTranslation();
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   return (
     <div className="relative" ref={dropdownRef}>
