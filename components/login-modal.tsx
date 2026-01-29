@@ -6,11 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-
-import Link from 'next/link';
+import { X } from 'lucide-react';
 import { useTranslation } from '@/i18n/context';
 
-export default function LoginPage() {
+interface LoginModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onOpenSignup: () => void;
+}
+
+export default function LoginModal({ isOpen, onClose, onOpenSignup }: LoginModalProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
@@ -18,7 +23,6 @@ export default function LoginPage() {
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     setError('');
-    // For clients, we redirect to events or buyer dashboard
     const result = await signIn(formData);
     if (result?.error) {
       setError(result.error);
@@ -26,9 +30,18 @@ export default function LoginPage() {
     }
   }
 
+  if (!isOpen) return null;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-pink-50 px-4">
-      <Card className="w-full max-w-md shadow-2xl border-t-4 border-t-indigo-600">
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+      <Card className="w-full max-w-md shadow-2xl border-t-4 border-t-indigo-600 relative">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <X className="w-5 h-5 text-gray-500" />
+        </button>
+
         <CardHeader className="space-y-1">
           <CardTitle className="text-3xl font-extrabold text-indigo-900 text-center">{t('auth.welcome')}</CardTitle>
           <CardDescription className="text-center text-gray-600">
@@ -48,10 +61,9 @@ export default function LoginPage() {
                 className="border-indigo-100 focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
+
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-indigo-900 font-semibold">{t('common.password')}</Label>
-              </div>
+              <Label htmlFor="password" className="text-indigo-900 font-semibold">{t('common.password')}</Label>
               <Input
                 id="password"
                 name="password"
@@ -61,35 +73,40 @@ export default function LoginPage() {
                 className="border-indigo-100 focus:border-indigo-500 focus:ring-indigo-500"
               />
             </div>
+
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg text-sm font-medium animate-pulse">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
                 {error}
               </div>
             )}
-            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-6 rounded-xl text-lg font-bold transition-all transform hover:scale-[1.02]" disabled={loading}>
-              {loading ? t('auth.logging_in') : t('common.login')}
+
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold"
+            >
+              {loading ? t('common.loading') : t('auth.login')}
             </Button>
-
-            <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500 font-medium">{t('auth.new_here')}</span>
-              </div>
-            </div>
-
-            <Button asChild variant="outline" className="w-full border-2 border-indigo-100 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-200 py-6 rounded-xl font-bold">
-              <Link href="/signup">{t('auth.create_account_btn')}</Link>
-            </Button>
-
-            <p className="text-center text-sm text-gray-400 mt-6">
-              {t('auth.is_organizer')}{' '}
-              <Link href="/organizer/login" className="text-indigo-600 hover:underline font-semibold">
-                {t('auth.access_here')}
-              </Link>
-            </p>
           </form>
+
+          <div className="mt-6 relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">{t('common.or')}</span>
+            </div>
+          </div>
+
+          <p className="mt-6 text-center text-gray-600 text-sm">
+            {t('auth.no_account')}{' '}
+            <button
+              onClick={onOpenSignup}
+              className="text-indigo-600 font-semibold hover:text-indigo-700 underline"
+            >
+              {t('common.signup')}
+            </button>
+          </p>
         </CardContent>
       </Card>
     </div>

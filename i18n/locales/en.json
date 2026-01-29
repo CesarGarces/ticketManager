@@ -21,7 +21,8 @@
     "search": "Search",
     "all": "All",
     "order_details": "Order Details",
-    "all_rights_reserved": "All rights reserved"
+    "all_rights_reserved": "All rights reserved",
+    "or": "New here?"
   },
   "home": {
     "hero_title": "Event Management Made Simple",
@@ -37,11 +38,13 @@
   "auth": {
     "welcome": "Welcome back!",
     "login_subtitle": "Log in to your account to manage your tickets",
+    "login": "Log In",
     "signup_title": "Create an account",
     "signup_subtitle": "Join us to start buying tickets for your favorite events",
     "logging_in": "Logging in...",
     "creating_account": "Creating account...",
     "new_here": "New here?",
+    "no_account": "Don't have an account?",
     "create_account_btn": "Create an Account",
     "is_organizer": "Are you an organizer?",
     "access_here": "Access here",

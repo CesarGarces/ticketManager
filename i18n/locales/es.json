@@ -21,7 +21,8 @@
     "search": "Buscar",
     "all": "Todos",
     "order_details": "Detalles del Pedido",
-    "all_rights_reserved": "Todos los derechos reservados"
+    "all_rights_reserved": "Todos los derechos reservados",
+    "or": "¿Eres nuevo aquí?"
   },
   "home": {
     "hero_title": "Gestión de Eventos Hecha Simple",
@@ -37,11 +38,13 @@
   "auth": {
     "welcome": "¡Bienvenido de nuevo!",
     "login_subtitle": "Inicia sesión en tu cuenta para gestionar tus entradas",
+    "login": "Iniciar Sesión",
     "signup_title": "Crea una cuenta",
     "signup_subtitle": "Únete a nosotros para empezar a comprar entradas para tus eventos favoritos",
     "logging_in": "Iniciando sesión...",
     "creating_account": "Creando cuenta...",
     "new_here": "¿Eres nuevo aquí?",
+    "no_account": "¿No tienes una cuenta?",
     "create_account_btn": "Crear una Cuenta",
     "is_organizer": "¿Eres un organizador?",
     "access_here": "Accede aquí",
