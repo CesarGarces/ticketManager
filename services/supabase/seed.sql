@@ -7,11 +7,19 @@
 INSERT INTO organizers (id, email, name) VALUES
   ('YOUR_USER_ID_HERE', 'organizer@example.com', 'Test Organizer');
 
+-- Insert test categories
+INSERT INTO event_categories (id, name, slug, description) VALUES
+  ('e1eebc99-9c0b-4ef8-bb6d-6bb9bd380e11', 'Conferencia', 'conferencias', 'Eventos profesionales y tecnológicos'),
+  ('e2eebc99-9c0b-4ef8-bb6d-6bb9bd380e22', 'Taller', 'talleres', 'Sesiones prácticas de aprendizaje'),
+  ('e3eebc99-9c0b-4ef8-bb6d-6bb9bd380e33', 'Música', 'musica', 'Conciertos y festivales musicales'),
+  ('e4eebc99-9c0b-4ef8-bb6d-6bb9bd380e44', 'Reunión', 'reuniones', 'Encuentros sociales y networking');
+
 -- Insert test events
-INSERT INTO events (id, organizer_id, title, description, slug, location, start_date, end_date, status) VALUES
+INSERT INTO events (id, organizer_id, category_id, title, description, slug, location, start_date, end_date, status) VALUES
   (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     'YOUR_USER_ID_HERE',
+    'e1eebc99-9c0b-4ef8-bb6d-6bb9bd380e11',
     'Tech Conference 2026',
     'Annual technology conference featuring the latest innovations in software development, AI, and cloud computing.',
     'tech-conference-2026',
@@ -23,6 +31,7 @@ INSERT INTO events (id, organizer_id, title, description, slug, location, start_
   (
     'b1eebc99-9c0b-4ef8-bb6d-6bb9bd380a22',
     'YOUR_USER_ID_HERE',
+    'e4eebc99-9c0b-4ef8-bb6d-6bb9bd380e44',
     'Startup Networking Mixer',
     'Connect with fellow entrepreneurs, investors, and innovators in the startup ecosystem.',
     'startup-networking-mixer',
@@ -34,6 +43,7 @@ INSERT INTO events (id, organizer_id, title, description, slug, location, start_
   (
     'c2eebc99-9c0b-4ef8-bb6d-6bb9bd380a33',
     'YOUR_USER_ID_HERE',
+    'e2eebc99-9c0b-4ef8-bb6d-6bb9bd380e22',
     'Product Design Workshop',
     'Hands-on workshop covering user research, prototyping, and design thinking methodologies.',
     'product-design-workshop',

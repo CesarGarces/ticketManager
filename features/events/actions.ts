@@ -19,6 +19,7 @@ export async function createEvent(data: CreateEventDTO): Promise<{ event?: Event
     .from('events')
     .insert({
       organizer_id: user.id,
+      category_id: data.category_id,
       title: data.title,
       description: data.description,
       slug,
@@ -55,16 +56,35 @@ export async function getEvents(): Promise<Event[]> {
   return (events as Event[]) || [];
 }
 
-export async function getPublicEvents(): Promise<Event[]> {
+export async function getPublicEvents(filters?: { search?: string; categoryId?: string }): Promise<Event[]> {
   const supabase = await createServerSupabaseClient();
 
-  const { data: events } = await supabase
+  let query = supabase
     .from('events')
     .select('*')
-    .eq('status', EventStatus.PUBLISHED)
-    .order('start_date', { ascending: true });
+    .eq('status', EventStatus.PUBLISHED);
+
+  if (filters?.search) {
+    query = query.or(`title.ilike.%${filters.search}%,location.ilike.%${filters.search}%`);
+  }
+
+  if (filters?.categoryId && filters.categoryId !== 'all') {
+    query = query.eq('category_id', filters.categoryId);
+  }
+
+  const { data: events } = await query.order('start_date', { ascending: true });
 
   return (events as Event[]) || [];
+}
+
+export async function getEventCategories() {
+  const supabase = await createServerSupabaseClient();
+  const { data: categories } = await supabase
+    .from('event_categories')
+    .select('*')
+    .order('name', { ascending: true });
+
+  return categories || [];
 }
 
 export async function getEventById(id: string): Promise<Event | null> {

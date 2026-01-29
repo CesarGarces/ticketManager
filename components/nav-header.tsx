@@ -17,7 +17,7 @@ export default async function NavHeader() {
             TicketManager
           </Link>
           <nav className="hidden md:flex items-center gap-1">
-            <Link href="/events">
+            <Link href="/">
               <Button variant="ghost" className="text-gray-600 hover:text-indigo-600 font-medium">
                 {t('common.browse_events')}
               </Button>

@@ -34,7 +34,7 @@ export default async function PublicEventPage({ params }: { params: Promise<{ sl
       <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
-            <Link href="/events">
+            <Link href="/">
               <Button variant="ghost" className="gap-2 text-gray-600 hover:text-indigo-600 pl-0">
                 <ArrowLeft className="w-4 h-4" />
                 {t('common.back')}

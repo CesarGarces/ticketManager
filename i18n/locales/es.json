@@ -18,6 +18,9 @@
     "status": "Estado",
     "language": "Idioma",
     "view_details": "Ver Detalles",
+    "search": "Buscar",
+    "all": "Todos",
+    "order_details": "Detalles del Pedido",
     "all_rights_reserved": "Todos los derechos reservados"
   },
   "home": {
@@ -71,6 +74,8 @@
     "title_placeholder": "Conferencia Tech 2026",
     "description_label": "Descripción",
     "description_placeholder": "Describe tu evento...",
+    "event_type": "Tipo de Evento",
+    "select_category": "Seleccionar categoría...",
     "location_label": "Ubicación",
     "location_placeholder": "Centro de Convenciones de San Francisco",
     "start_date": "Fecha y Hora de Inicio",
@@ -110,6 +115,9 @@
     "date": "Fecha",
     "no_upcoming": "No se encontraron eventos próximos.",
     "check_back": "¡Vuelve más tarde para ver nuevos eventos!",
+    "search_placeholder": "Buscar por lugar o título...",
+    "filter_by_type": "Filtrar por tipo",
+    "no_results": "No se encontraron eventos para esta búsqueda.",
     "date_time": "Fecha y Hora",
     "to": "al",
     "get_tickets": "Consigue tus Entradas",

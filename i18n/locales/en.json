@@ -18,6 +18,9 @@
     "status": "Status",
     "language": "Language",
     "view_details": "View Details",
+    "search": "Search",
+    "all": "All",
+    "order_details": "Order Details",
     "all_rights_reserved": "All rights reserved"
   },
   "home": {
@@ -71,6 +74,8 @@
     "title_placeholder": "Tech Conference 2026",
     "description_label": "Description",
     "description_placeholder": "Describe your event...",
+    "event_type": "Event Type",
+    "select_category": "Select category...",
     "location_label": "Location",
     "location_placeholder": "San Francisco Convention Center",
     "start_date": "Start Date & Time",
@@ -110,6 +115,9 @@
     "date": "Date",
     "no_upcoming": "No upcoming events found.",
     "check_back": "Check back later for new events!",
+    "search_placeholder": "Search by place or title...",
+    "filter_by_type": "Filter by type",
+    "no_results": "No events found matching your search.",
     "date_time": "Date & Time",
     "to": "to",
     "get_tickets": "Get Your Tickets",

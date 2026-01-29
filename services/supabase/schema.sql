@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS order_items CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS ticket_types CASCADE;
 DROP TABLE IF EXISTS events CASCADE;
+DROP TABLE IF EXISTS event_categories CASCADE;
 DROP TABLE IF EXISTS organizers CASCADE;
 
 -- Enable UUID extension
@@ -18,10 +19,20 @@ CREATE TABLE organizers (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Event categories table
+CREATE TABLE event_categories (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  name TEXT NOT NULL UNIQUE,
+  slug TEXT NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- Events table
 CREATE TABLE events (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   organizer_id UUID NOT NULL REFERENCES organizers(id) ON DELETE CASCADE,
+  category_id UUID REFERENCES event_categories(id) ON DELETE SET NULL,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   slug TEXT NOT NULL UNIQUE,
@@ -71,6 +82,7 @@ CREATE TABLE order_items (
 
 -- Indexes for performance
 CREATE INDEX idx_events_organizer ON events(organizer_id);
+CREATE INDEX idx_events_category ON events(category_id);
 CREATE INDEX idx_events_slug ON events(slug);
 CREATE INDEX idx_events_status ON events(status);
 CREATE INDEX idx_ticket_types_event ON ticket_types(event_id);
@@ -183,3 +195,67 @@ CREATE TRIGGER trigger_update_ticket_stock
 AFTER INSERT ON order_items
 FOR EACH ROW
 EXECUTE FUNCTION update_ticket_stock();
+
+-- Buyers table (similar to organizers, for user profiles)
+CREATE TABLE IF NOT EXISTS buyers (
+  id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Purchases table (tracks individual ticket purchases with payment info)
+CREATE TABLE IF NOT EXISTS purchases (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  buyer_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
+  ticket_type_id UUID NOT NULL REFERENCES ticket_types(id) ON DELETE CASCADE,
+  event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  quantity INTEGER NOT NULL CHECK (quantity > 0),
+  payment_id TEXT,
+  payment_status TEXT NOT NULL DEFAULT 'pending' CHECK (payment_status IN ('pending', 'approved', 'rejected', 'cancelled', 'in_process')),
+  purchase_date TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Indexes for performance (Buyer/Purchases)
+CREATE INDEX IF NOT EXISTS idx_purchases_buyer ON purchases(buyer_id);
+CREATE INDEX IF NOT EXISTS idx_purchases_event ON purchases(event_id);
+CREATE INDEX IF NOT EXISTS idx_purchases_payment_id ON purchases(payment_id);
+CREATE INDEX IF NOT EXISTS idx_purchases_payment_status ON purchases(payment_status);
+CREATE INDEX IF NOT EXISTS idx_buyers_email ON buyers(email);
+
+-- Enable RLS for new tables
+ALTER TABLE buyers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE purchases ENABLE ROW LEVEL SECURITY;
+
+-- Buyers: Users can only see their own profile
+CREATE POLICY "Users can view own buyer profile" ON buyers
+  FOR SELECT USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own buyer profile" ON buyers
+  FOR UPDATE USING (auth.uid() = id);
+
+CREATE POLICY "Users can insert own buyer profile" ON buyers
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Purchases: Buyers can view their own purchases
+CREATE POLICY "Buyers can view own purchases" ON purchases
+  FOR SELECT USING (auth.uid() = buyer_id);
+
+CREATE POLICY "Buyers can create purchases" ON purchases
+  FOR INSERT WITH CHECK (auth.uid() = buyer_id);
+
+-- Organizers can view purchases for their events
+CREATE POLICY "Organizers can view event purchases" ON purchases
+  FOR SELECT USING (
+    EXISTS (
+      SELECT 1 FROM events 
+      WHERE events.id = purchases.event_id 
+      AND events.organizer_id = auth.uid()
+    )
+  );
+
+-- System can update purchase payment status (for webhooks)
+CREATE POLICY "System can update purchase payment status" ON purchases
+  FOR UPDATE USING (true)
+  WITH CHECK (true);

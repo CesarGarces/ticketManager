@@ -1,5 +1,12 @@
 // Core domain entities for the event management platform
 
+export interface EventCategory {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+}
+
 export interface Organizer {
   id: string;
   email: string;
@@ -14,6 +21,7 @@ export interface Event {
   description: string;
   slug: string;
   location: string;
+  category_id?: string;
   start_date: string;
   end_date: string;
   status: EventStatus;

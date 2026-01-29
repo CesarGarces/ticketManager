@@ -93,7 +93,13 @@ export async function createOrder(data: CreateOrderDTO): Promise<{ order?: Order
       payment_status: 'approved',
     }));
 
-    await supabase.from('purchases').insert(purchases);
+    const { error: purchaseError } = await supabase.from('purchases').insert(purchases);
+
+    if (purchaseError) {
+      console.error('Error creating purchases:', purchaseError);
+      // We don't fail the order creation here as the payment is already "processed" in this simulation
+      // but in a real scenario we might want to handle this more gracefully
+    }
   }
 
   revalidatePath(`/events/${data.event_id}`);

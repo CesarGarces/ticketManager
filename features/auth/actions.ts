@@ -25,18 +25,19 @@ export async function signIn(formData: FormData) {
       .from('organizers')
       .select('id')
       .eq('id', user.id)
-      .single();
+      .maybeSingle();
 
     revalidatePath('/', 'layout');
     
     if (organizer) {
       redirect('/dashboard');
     } else {
-      redirect('/events');
+      // If it's a buyer or doesn't have a profile yet, go to home
+      redirect('/');
     }
   }
 
-  redirect('/events');
+  redirect('/');
 }
 
 export async function signOut() {
@@ -63,7 +64,7 @@ export async function getProfile() {
     .from('organizers')
     .select('name, email')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
   if (organizer) return { ...organizer, role: 'organizer' };
 
@@ -72,7 +73,7 @@ export async function getProfile() {
     .from('buyers')
     .select('name, email')
     .eq('id', user.id)
-    .single();
+    .maybeSingle();
 
   if (buyer) return { ...buyer, role: 'buyer' };
 

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createEvent } from '@/features/events/actions';
+import { createEvent, getEventCategories } from '@/features/events/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,7 +15,16 @@ export default function NewEventPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [categories, setCategories] = useState<any[]>([]);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    async function loadCategories() {
+      const cats = await getEventCategories();
+      setCategories(cats);
+    }
+    loadCategories();
+  }, []);
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
@@ -25,6 +34,7 @@ export default function NewEventPage() {
       title: formData.get('title') as string,
       description: formData.get('description') as string,
       location: formData.get('location') as string,
+      category_id: formData.get('category_id') as string,
       start_date: formData.get('start_date') as string,
       end_date: formData.get('end_date') as string,
     };
@@ -89,6 +99,23 @@ export default function NewEventPage() {
                   placeholder={t('dashboard.location_placeholder')}
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="category_id">{t('dashboard.event_type') || 'Tipo de Evento'} *</Label>
+                <select
+                  id="category_id"
+                  name="category_id"
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  required
+                >
+                  <option value="">{t('dashboard.select_category') || 'Seleccionar categoría...'}</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
