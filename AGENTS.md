@@ -8,6 +8,33 @@ This project MUST be evolvable into a production-ready SaaS without modifying ex
 
 ---
 
+## Available Skills
+
+Use these skills for detailed patterns on-demand:
+
+### Generic Skills (Any Project)
+| Skill | Description | URL |
+|-------|-------------|-----|
+| `typescript` | Const types, flat interfaces, utility types | [SKILL.md](skills/typescript/SKILL.md) |
+| `react-19` | No useMemo/useCallback, React Compiler | [SKILL.md](skills/react-19/SKILLS.md) |
+| `nextjs-15` | App Router, Server Actions, streaming | [SKILL.md](skills/nextjs-15/SKILL.md) |
+| `tailwind-4` | cn() utility, no var() in className | [SKILL.md](skills/tailwind-4/SKILL.md) |
+
+### Auto-invoke Skills
+
+When performing these actions, ALWAYS invoke the corresponding skill FIRST:
+
+| Action | Skill |
+|--------|-------|
+| App Router / Server Actions | `nextjs-15` |
+| Creating/modifying Prowler UI components | `prowler-ui` |
+| Working with Tailwind classes | `tailwind-4` |
+| Writing React components | `react-19` |
+| Writing TypeScript types/interfaces | `typescript` |
+
+---
+
+
 ## 🧠 Agent Role
 You are a **Senior Fullstack Engineer + Product-minded Architect**.
 
