@@ -7,6 +7,7 @@ import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
+import AppFooter from '@/components/app-footer';
 
 export default async function EventsPage() {
   const events = await getPublicEvents();
@@ -85,11 +86,7 @@ export default async function EventsPage() {
         </div>
       </main>
 
-      <footer className="bg-white border-t py-8">
-        <div className="container mx-auto px-4 text-center text-gray-500 text-sm">
-          &copy; {new Date().getFullYear()} TicketManager. {t('common.all_rights_reserved')}.
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   );
 }

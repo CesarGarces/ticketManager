@@ -11,13 +11,14 @@ import Link from 'next/link';
 import TicketSelector from '@/components/ticket-selector';
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
+import { USER_TYPE } from '@/lib/constants';
 
 export default async function PublicEventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const event = await getEventBySlug(slug);
   const profile = await getProfile();
   const { t } = await getTranslation();
-
+  console.log('Profile:', profile);
   if (!event) {
     notFound();
   }
@@ -56,7 +57,7 @@ export default async function PublicEventPage({ params }: { params: Promise<{ sl
               )}
 
               <div className="relative">
-                {profile?.role === 'organizer' && (
+                {profile?.role === USER_TYPE.ORGANIZER && (
                   <Badge className="mb-4 bg-white text-blue-600 capitalize">
                     {event.status}
                   </Badge>

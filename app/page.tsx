@@ -7,9 +7,9 @@ import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { formatDate } from '@/lib/utils';
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
+import AppFooter from '@/components/app-footer';
 import { EventFilters } from '@/components/event-filters';
 import { getEventCategories } from '@/features/events/actions';
-
 import { FeaturedEventHero } from '@/components/featured-event-hero';
 
 export default async function HomePage({
@@ -126,11 +126,7 @@ export default async function HomePage({
         </div>
       </main>
 
-      <footer className="bg-white border-t py-8">
-        <div className="container mx-auto px-4 text-center text-gray-400 text-sm">
-          &copy; {new Date().getFullYear()} TicketManager. {t('common.all_rights_reserved')}.
-        </div>
-      </footer>
+      <AppFooter />
     </div>
   );
 }
