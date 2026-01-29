@@ -27,7 +27,6 @@ When performing these actions, ALWAYS invoke the corresponding skill FIRST:
 | Action | Skill |
 |--------|-------|
 | App Router / Server Actions | `nextjs-15` |
-| Creating/modifying Prowler UI components | `prowler-ui` |
 | Working with Tailwind classes | `tailwind-4` |
 | Writing React components | `react-19` |
 | Writing TypeScript types/interfaces | `typescript` |
