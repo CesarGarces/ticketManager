@@ -37,6 +37,7 @@ next-env.d.ts
 
 # AI Instructions
 GEMINI.md
+CLAUDE.md
 
 # AI Skills symlinks
 .claude/skills

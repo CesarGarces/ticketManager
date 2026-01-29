@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import UserNav from '@/components/user-nav';
 import LanguageSwitcher from '@/components/language-switcher';
+import AuthSwitcher from '@/components/auth-switcher';
 import { getProfile } from '@/features/auth/actions';
 import { getTranslation } from '@/i18n/server';
 
@@ -32,14 +33,7 @@ export default async function NavHeader() {
           {profile ? (
             <UserNav user={profile as any} />
           ) : (
-            <>
-              <Link href="/login">
-                <Button variant="ghost" className="text-gray-600 font-medium">{t('common.login')}</Button>
-              </Link>
-              <Link href="/signup">
-                <Button className="bg-indigo-600 hover:bg-indigo-700 shadow-md transition-all active:scale-95">{t('common.signup')}</Button>
-              </Link>
-            </>
+            <AuthSwitcher />
           )}
         </div>
       </div>
