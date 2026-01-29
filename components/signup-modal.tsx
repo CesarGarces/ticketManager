@@ -99,15 +99,6 @@ export default function SignupModal({ isOpen, onClose, onOpenLogin }: SignupModa
             </Button>
           </form>
 
-          <div className="mt-6 relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">{t('common.or')}</span>
-            </div>
-          </div>
-
           <p className="mt-6 text-center text-gray-600 text-sm">
             {t('auth.already_account')}{' '}
             <button
