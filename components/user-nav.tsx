@@ -7,6 +7,7 @@ import { signOut } from '@/features/auth/actions';
 import Link from 'next/link';
 
 import { useTranslation } from '@/i18n/context';
+import { USER_TYPE } from '@/lib/constants';
 
 interface UserNavProps {
   user: {
@@ -52,7 +53,7 @@ export default function UserNav({ user }: UserNavProps) {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in zoom-in duration-200">
           <div className="p-1 border-b border-gray-50">
-            {user.role === 'organizer' ? (
+            {user.role === USER_TYPE.ORGANIZER ? (
               <Link href="/dashboard" onClick={() => setIsOpen(false)}>
                 <Button variant="ghost" className="w-full justify-start text-sm hover:bg-gray-50 rounded-lg">
                   <LayoutDashboard className="w-4 h-4 mr-2 text-gray-400" />

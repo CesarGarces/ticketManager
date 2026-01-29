@@ -18,7 +18,7 @@ export default async function PublicEventPage({ params }: { params: Promise<{ sl
   const event = await getEventBySlug(slug);
   const profile = await getProfile();
   const { t } = await getTranslation();
-  console.log('Profile:', profile);
+
   if (!event) {
     notFound();
   }
