@@ -49,7 +49,7 @@ export async function signOut() {
   const supabase = await createServerSupabaseClient();
   await supabase.auth.signOut();
   revalidatePath('/', 'layout');
-  redirect('/');
+  redirect('/login');
 }
 
 export async function getUser() {
