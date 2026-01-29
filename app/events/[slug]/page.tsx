@@ -43,14 +43,27 @@ export default async function PublicEventPage({ params }: { params: Promise<{ sl
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border overflow-hidden mb-8">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 md:p-12 text-center">
-              {profile?.role === 'organizer' && (
-                <Badge className="mb-4 bg-white text-blue-600 capitalize">
-                  {event.status}
-                </Badge>
+            <div className={`relative p-8 md:p-12 text-center text-white ${!event.image_url ? 'bg-gradient-to-r from-blue-600 to-purple-600' : ''}`}>
+              {event.image_url && (
+                <>
+                  <img
+                    src={event.image_url}
+                    alt={event.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/50" />
+                </>
               )}
-              <h1 className="text-4xl font-bold mb-4">{event.title}</h1>
-              <p className="text-lg text-blue-50">{event.description}</p>
+
+              <div className="relative">
+                {profile?.role === 'organizer' && (
+                  <Badge className="mb-4 bg-white text-blue-600 capitalize">
+                    {event.status}
+                  </Badge>
+                )}
+                <h1 className="text-4xl font-bold mb-4 text-shadow">{event.title}</h1>
+                <p className="text-lg text-blue-50 text-shadow-sm">{event.description}</p>
+              </div>
             </div>
 
             <div className="p-8">

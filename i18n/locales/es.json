@@ -76,6 +76,7 @@
     "description_placeholder": "Describe tu evento...",
     "event_type": "Tipo de Evento",
     "select_category": "Seleccionar categoría...",
+    "event_image": "Imagen del Evento",
     "location_label": "Ubicación",
     "location_placeholder": "Centro de Convenciones de San Francisco",
     "start_date": "Fecha y Hora de Inicio",

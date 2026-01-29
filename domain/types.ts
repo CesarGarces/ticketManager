@@ -14,6 +14,7 @@ export interface CreateEventDTO {
   category_id?: string;
   start_date: string;
   end_date: string;
+  image_path?: string;
 }
 
 export interface CreateTicketTypeDTO {

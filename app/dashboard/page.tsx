@@ -116,7 +116,20 @@ export default async function DashboardPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {events.map((event) => (
                 <Link key={event.id} href={`/dashboard/events/${event.id}`}>
-                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full border-indigo-50">
+                  <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full border-indigo-50 overflow-hidden flex flex-col">
+                    <div className="h-48 relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
+                      {event.image_url ? (
+                        <img
+                          src={event.image_url}
+                          alt={event.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="p-6 text-white text-center">
+                          <h3 className="text-2xl font-bold">{event.title}</h3>
+                        </div>
+                      )}
+                    </div>
                     <CardHeader>
                       <div className="flex justify-between items-start mb-2">
                         <Badge variant={event.status === 'published' ? 'default' : 'secondary'} className={event.status === 'published' ? 'bg-indigo-600' : ''}>

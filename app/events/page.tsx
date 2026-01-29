@@ -35,8 +35,18 @@ export default async function EventsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {events.map((event) => (
                 <Card key={event.id} className="overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
-                  <div className="h-48 bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center p-6 text-white text-center">
-                    <h3 className="text-2xl font-bold">{event.title}</h3>
+                  <div className="h-48 relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center transition-transform hover:scale-[1.02]">
+                    {event.image_url ? (
+                      <img
+                        src={event.image_url}
+                        alt={event.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="p-6 text-white text-center">
+                        <h3 className="text-2xl font-bold">{event.title}</h3>
+                      </div>
+                    )}
                   </div>
                   <CardHeader>
                     <div className="flex justify-between items-start mb-2">

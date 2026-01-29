@@ -4,6 +4,7 @@ import { createServerSupabaseClient } from '@/services/supabase/client';
 import { CreateEventDTO, Event, EventStatus } from '@/domain/types';
 import { generateSlug } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
+import { getEventImageSignedUrl } from '@/services/storage/actions';
 
 export async function createEvent(data: CreateEventDTO): Promise<{ event?: Event; error?: string }> {
   const supabase = await createServerSupabaseClient();
@@ -26,6 +27,7 @@ export async function createEvent(data: CreateEventDTO): Promise<{ event?: Event
       location: data.location,
       start_date: data.start_date,
       end_date: data.end_date,
+      image_path: data.image_path,
       status: EventStatus.DRAFT,
     })
     .select()
@@ -53,6 +55,14 @@ export async function getEvents(): Promise<Event[]> {
     .eq('organizer_id', user.id)
     .order('created_at', { ascending: false });
 
+  if (events) {
+    for (const event of events) {
+      if (event.image_path) {
+        (event as Event).image_url = await getEventImageSignedUrl(event.image_path) || undefined;
+      }
+    }
+  }
+
   return (events as Event[]) || [];
 }
 
@@ -73,6 +83,14 @@ export async function getPublicEvents(filters?: { search?: string; categoryId?: 
   }
 
   const { data: events } = await query.order('start_date', { ascending: true });
+
+  if (events) {
+    for (const event of events) {
+      if (event.image_path) {
+        (event as Event).image_url = await getEventImageSignedUrl(event.image_path) || undefined;
+      }
+    }
+  }
 
   return (events as Event[]) || [];
 }
@@ -96,6 +114,10 @@ export async function getEventById(id: string): Promise<Event | null> {
     .eq('id', id)
     .single();
 
+  if (event && event.image_path) {
+    (event as Event).image_url = await getEventImageSignedUrl(event.image_path) || undefined;
+  }
+
   return event as Event | null;
 }
 
@@ -108,6 +130,10 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
     .eq('slug', slug)
     .eq('status', EventStatus.PUBLISHED)
     .single();
+
+  if (event && event.image_path) {
+    (event as Event).image_url = await getEventImageSignedUrl(event.image_path) || undefined;
+  }
 
   return event as Event | null;
 }

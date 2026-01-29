@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createEvent, getEventCategories } from '@/features/events/actions';
+import { uploadEventImage } from '@/services/storage/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -30,6 +31,28 @@ export default function NewEventPage() {
     setLoading(true);
     setError('');
 
+    let imagePath;
+    const imageFile = formData.get('image') as File;
+    if (imageFile && imageFile.size > 0) {
+      // Dynamically import to avoid server-only module issues in client component if checking types strictly, 
+      // but here we are calling a server action which is fine.
+      const { uploadEventImage } = await import('@/services/storage/actions');
+      const uploadResult = await uploadEventImage(formData); // Re-use formData or create new one if needed
+
+      // Since uploadEventImage expects 'file', we need to ensure formData has 'file'
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', imageFile);
+
+      const { path, error: uploadError } = await uploadEventImage(uploadFormData);
+
+      if (uploadError) {
+        setError(uploadError);
+        setLoading(false);
+        return;
+      }
+      imagePath = path;
+    }
+
     const data = {
       title: formData.get('title') as string,
       description: formData.get('description') as string,
@@ -37,6 +60,7 @@ export default function NewEventPage() {
       category_id: formData.get('category_id') as string,
       start_date: formData.get('start_date') as string,
       end_date: formData.get('end_date') as string,
+      image_path: imagePath,
     };
 
     const result = await createEvent(data);
@@ -116,6 +140,16 @@ export default function NewEventPage() {
                     </option>
                   ))}
                 </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="image">{t('dashboard.event_image') || 'Imagen del evento'}</Label>
+                <Input
+                  id="image"
+                  name="image"
+                  type="file"
+                  accept="image/*"
+                />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">

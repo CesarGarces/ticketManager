@@ -43,19 +43,35 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               {t('dashboard.back_to_dashboard')}
             </Link>
           </div>
-          <div className="flex justify-between items-start mb-8">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold">{event.title}</h1>
-                <Badge variant={event.status === 'published' ? 'default' : 'secondary'} className="capitalize">
-                  {event.status}
-                </Badge>
+          <div className="bg-white rounded-xl shadow-sm border overflow-hidden mb-8">
+            <div className={`relative p-8 text-white ${!event.image_url ? 'bg-gradient-to-r from-blue-600 to-purple-600' : ''}`}>
+              {event.image_url && (
+                <>
+                  <img
+                    src={event.image_url}
+                    alt={event.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/50" />
+                </>
+              )}
+              <div className="relative flex justify-between items-start">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <h1 className="text-3xl font-bold text-shadow">{event.title}</h1>
+                    <Badge variant={event.status === 'published' ? 'default' : 'secondary'} className="capitalize bg-white/20 hover:bg-white/30 text-white border-none backdrop-blur-sm">
+                      {event.status}
+                    </Badge>
+                  </div>
+                  <p className="text-blue-50 text-shadow-sm max-w-3xl">{event.description}</p>
+                </div>
+                {event.status === EventStatus.DRAFT && ticketTypes.length > 0 && (
+                  <div className="bg-white/10 p-1 rounded-lg backdrop-blur-sm">
+                    <PublishEventButton eventId={event.id} />
+                  </div>
+                )}
               </div>
-              <p className="text-gray-600">{event.description}</p>
             </div>
-            {event.status === EventStatus.DRAFT && ticketTypes.length > 0 && (
-              <PublishEventButton eventId={event.id} />
-            )}
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-8">

@@ -76,6 +76,7 @@
     "description_placeholder": "Describe your event...",
     "event_type": "Event Type",
     "select_category": "Select category...",
+    "event_image": "Event Image",
     "location_label": "Location",
     "location_placeholder": "San Francisco Convention Center",
     "start_date": "Start Date & Time",
