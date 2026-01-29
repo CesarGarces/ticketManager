@@ -21,18 +21,23 @@ export async function signIn(formData: FormData) {
 
   if (user) {
     // Detect role to redirect correctly
-    const { data: organizer } = await supabase
-      .from('organizers')
-      .select('id')
-      .eq('id', user.id)
-      .maybeSingle();
+    const { data: userRole } = await supabase
+      .from('user_roles')
+      .select('role:roles(name)')
+      .eq('user_id', user.id)
+      .single();
 
     revalidatePath('/', 'layout');
     
-    if (organizer) {
+    // Check if role is organizer
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const roleObj = userRole?.role as any;
+    const roleName = roleObj?.name;
+
+    if (roleName === 'organizer') {
       redirect('/dashboard');
     } else {
-      // If it's a buyer or doesn't have a profile yet, go to home
+      // If it's a buyer/user, go to home
       redirect('/');
     }
   }
@@ -59,23 +64,25 @@ export async function getProfile() {
   
   if (!user) return null;
 
-  // Try to find in organizers
-  const { data: organizer } = await supabase
-    .from('organizers')
+  // Fetch profile
+  const { data: profile } = await supabase
+    .from('profiles')
     .select('name, email')
     .eq('id', user.id)
+    .single();
+
+  if (!profile) return { email: user.email, role: 'user' };
+
+  // Fetch role
+  const { data: userRole } = await supabase
+    .from('user_roles')
+    .select('role:roles(name)')
+    .eq('user_id', user.id)
     .maybeSingle();
 
-  if (organizer) return { ...organizer, role: 'organizer' };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const roleObj = userRole?.role as any;
+  const roleName = roleObj?.name || 'user';
 
-  // Try to find in buyers
-  const { data: buyer } = await supabase
-    .from('buyers')
-    .select('name, email')
-    .eq('id', user.id)
-    .maybeSingle();
-
-  if (buyer) return { ...buyer, role: 'buyer' };
-
-  return { email: user.email, role: 'user' };
+  return { ...profile, role: roleName };
 }

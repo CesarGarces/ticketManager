@@ -14,22 +14,19 @@ export async function signUp(formData: FormData) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      data: {
+        name,
+      },
+    },
   });
 
   if (error) {
     return { error: error.message };
   }
 
-  // Create buyer profile
-  if (data.user) {
-    await supabase
-      .from('buyers')
-      .insert({
-        id: data.user.id,
-        email,
-        name,
-      });
-  }
+  // Database triggers now handle profile creation and role assignment
+  // automatically upon auth.users insertion.
 
   revalidatePath('/', 'layout');
   redirect('/events');
