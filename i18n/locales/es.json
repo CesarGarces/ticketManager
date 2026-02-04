@@ -163,5 +163,21 @@
     "sent_desc_start": "Hemos enviado tus tickets y detalles del evento a",
     "view_my_tickets": "Ver Mis Tickets",
     "back_to_event": "Volver a la Página del Evento"
+  },
+  "payment": {
+    "processing": "Procesando...",
+    "buy_ticket": "Comprar Ticket",
+    "error_message": "Error al iniciar la compra. Por favor intenta nuevamente.",
+    "success_title": "¡Pago Exitoso!",
+    "success_desc": "Gracias por tu compra. Tus tickets están confirmados.",
+    "order_reference": "Referencia de Pedido",
+    "failed_title": "Pago Fallido",
+    "failed_desc": "Algo salió mal con tu transacción. Tu tarjeta no ha sido cobrada.",
+    "try_again": "Intentar de Nuevo",
+    "browse_events": "Explorar Eventos",
+    "what_to_do": "¿Qué puedo hacer?",
+    "check_connection": "Verifica tu conexión e intenta nuevamente en unos minutos.",
+    "card_balance": "Asegúrate de que tu tarjeta tiene saldo suficiente y está habilitada para pagos en línea.",
+    "try_different": "Intenta usar un método de pago diferente en MercadoPago."
   }
 }

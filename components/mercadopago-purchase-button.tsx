@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { createPurchaseWithPayment } from '@/features/purchases/actions';
 import { Loader2, ShoppingCart } from 'lucide-react';
+import { useTranslation } from '@/i18n/context';
 
 interface MercadoPagoPurchaseButtonProps {
   eventId: string;
@@ -19,6 +20,7 @@ export default function MercadoPagoPurchaseButton({
   disabled
 }: MercadoPagoPurchaseButtonProps) {
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   const handlePurchase = async () => {
     if (quantity <= 0) return;
@@ -42,7 +44,7 @@ export default function MercadoPagoPurchaseButton({
       }
     } catch (error) {
       console.error('Purchase error:', error);
-      alert('Failed to initiate purchase. Please try again.');
+      alert(t('payment.error_message') || 'Failed to initiate purchase. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -57,12 +59,12 @@ export default function MercadoPagoPurchaseButton({
       {loading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Processing...
+          {t('payment.processing')}
         </>
       ) : (
         <>
           <ShoppingCart className="mr-2 h-4 w-4" />
-          Buy Ticket
+          {t('payment.buy_ticket')}
         </>
       )}
     </Button>

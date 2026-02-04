@@ -8,7 +8,7 @@ import { Calendar, MapPin, Ticket, ArrowLeft } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import TicketSelector from '@/components/ticket-selector';
+import MercadoPagoPurchaseButton from '@/components/mercadopago-purchase-button';
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
 import { USER_TYPE } from '@/lib/constants';
@@ -139,10 +139,10 @@ export default async function PublicEventPage({ params }: { params: Promise<{ sl
                                 {available} {t('events.remaining')}
                               </div>
                               {!isSoldOut && (
-                                <TicketSelector
+                                <MercadoPagoPurchaseButton
                                   eventId={event.id}
-                                  ticketType={ticketType}
-                                  maxQuantity={Math.min(available, 10)}
+                                  ticketTypeId={ticketType.id}
+                                  quantity={1}
                                 />
                               )}
                             </div>

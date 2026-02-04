@@ -163,5 +163,21 @@
     "sent_desc_start": "We've sent your tickets and event details to",
     "view_my_tickets": "View My Tickets",
     "back_to_event": "Back to Event Page"
+  },
+  "payment": {
+    "processing": "Processing...",
+    "buy_ticket": "Buy Ticket",
+    "error_message": "Failed to initiate purchase. Please try again.",
+    "success_title": "Payment Successful!",
+    "success_desc": "Thank you for your purchase. Your tickets are confirmed.",
+    "order_reference": "Order Reference",
+    "failed_title": "Payment Failed",
+    "failed_desc": "Something went wrong with your transaction. Your card has not been charged.",
+    "try_again": "Try Again",
+    "browse_events": "Browse Events",
+    "what_to_do": "What can I do?",
+    "check_connection": "Check your connection and try again in a few minutes.",
+    "card_balance": "Make sure your credit card has enough balance and is enabled for online payments.",
+    "try_different": "Try using a different payment method in MercadoPago."
   }
 }
