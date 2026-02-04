@@ -21,7 +21,8 @@
     "all": "All",
     "order_details": "Order Details",
     "all_rights_reserved": "All rights reserved",
-    "or": "New here?"
+    "or": "New here?",
+    "browse_events": "Browse Events"
   },
   "home": {
     "hero_title": "Event Management Made Simple",

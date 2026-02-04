@@ -21,7 +21,8 @@
     "all": "Todos",
     "order_details": "Detalles del Pedido",
     "all_rights_reserved": "Todos los derechos reservados",
-    "or": "¿Eres nuevo aquí?"
+    "or": "¿Eres nuevo aquí?",
+    "browse_events": "Explorar Eventos"
   },
   "home": {
     "hero_title": "Gestión de Eventos Hecha Simple",
