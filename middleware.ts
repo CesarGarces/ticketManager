@@ -61,9 +61,27 @@ export async function middleware(request: NextRequest) {
   const isLoginRoute = request.nextUrl.pathname === '/login';
   const isOrganizerLoginRoute = request.nextUrl.pathname === '/organizer/login';
 
-  // Protect organizer dashboard
-  if (isOrganizerRoute && !user) {
-    return NextResponse.redirect(new URL('/organizer/login', request.url));
+  // Protect organizer dashboard - requires organizer role
+  if (isOrganizerRoute) {
+    if (!user) {
+      return NextResponse.redirect(new URL('/organizer/login', request.url));
+    }
+
+    // Check if user has organizer role
+    const { data: userRole } = await supabase
+      .from('user_roles')
+      .select('role:roles(name)')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const roleObj = userRole?.role as any;
+    const roleName = roleObj?.name;
+
+    if (roleName !== 'organizer') {
+      // Not an organizer - redirect to home
+      return NextResponse.redirect(new URL('/', request.url));
+    }
   }
 
   // Protect buyer dashboard

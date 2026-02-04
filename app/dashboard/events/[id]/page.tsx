@@ -1,5 +1,5 @@
 import { getEventById, updateEventStatus } from '@/features/events/actions';
-import { getProfile } from '@/features/auth/actions';
+import { validateOrganizerOwnsEvent } from '@/features/auth/actions';
 import { getTicketTypesByEvent } from '@/features/tickets/actions';
 import { getOrdersByEvent } from '@/features/orders/actions';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,10 @@ import NavHeader from '@/components/nav-header';
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  
+  // Validate that current organizer owns this event
+  await validateOrganizerOwnsEvent(id);
+  
   const event = await getEventById(id);
   const { t } = await getTranslation();
 
@@ -24,7 +28,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
     notFound();
   }
 
-  const profile = await getProfile();
   const ticketTypes = await getTicketTypesByEvent(id);
   const orders = await getOrdersByEvent(id);
 

@@ -1,11 +1,14 @@
-import { getProfile } from '@/features/auth/actions';
+import { getOrganizerProfile } from '@/features/auth/actions';
 import { getEvents, getDashboardStats } from '@/features/events/actions';
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
 import DashboardContent from '@/components/dashboard-content';
 
 export default async function DashboardPage() {
-  const profile = await getProfile();
+  // This validates that user is authenticated and has organizer role
+  // If not, getOrganizerProfile will redirect to home
+  const profile = await getOrganizerProfile();
+  
   const events = await getEvents();
   const stats = await getDashboardStats();
 
