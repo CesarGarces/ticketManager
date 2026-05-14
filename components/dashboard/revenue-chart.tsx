@@ -9,22 +9,22 @@ import {
 } from "@/components/ui/chart"
 import { useTranslation } from "@/i18n/context"
 
-interface EventSalesChartProps {
-  data: { name: string; sales: number }[]
+interface RevenueChartProps {
+  data: { name: string; revenue: number }[]
 }
 
-function getBarColor(sales: number) {
-  if (sales >= 51) return "hsl(var(--chart-1))"
-  if (sales >= 11) return "hsl(var(--chart-2))"
-  return "hsl(var(--chart-3))"
+function formatChartCurrency(value: number) {
+  if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`
+  if (value >= 1000) return `${(value / 1000).toFixed(0)}k`
+  return String(value)
 }
 
-export function EventSalesChart({ data }: EventSalesChartProps) {
+export function RevenueChart({ data }: RevenueChartProps) {
   const { t } = useTranslation();
 
   const chartConfig = {
-    sales: {
-      label: t('dashboard.chart_sales_label'),
+    revenue: {
+      label: t('dashboard.total_revenue'),
       color: "hsl(var(--chart-1))",
     },
   } satisfies ChartConfig
@@ -38,17 +38,18 @@ export function EventSalesChart({ data }: EventSalesChartProps) {
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={(value) => value.length > 15 ? `${value.slice(0, 15)}...` : value}
+          tickFormatter={(value) => value.length > 12 ? `${value.slice(0, 12)}...` : value}
         />
         <YAxis
           tickLine={false}
           axisLine={false}
           tickMargin={10}
+          tickFormatter={formatChartCurrency}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <Bar dataKey="sales" radius={8}>
+        <Bar dataKey="revenue" radius={8}>
           {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={getBarColor(entry.sales)} />
+            <Cell key={`cell-${index}`} fill="hsl(var(--chart-4))" />
           ))}
         </Bar>
       </BarChart>

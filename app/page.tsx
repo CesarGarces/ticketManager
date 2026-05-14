@@ -11,6 +11,7 @@ import AppFooter from '@/components/app-footer';
 import { EventFilters } from '@/components/event-filters';
 import { getEventCategories } from '@/features/events/actions';
 import { FeaturedEventHero } from '@/components/featured-event-hero';
+import ImageWithSkeleton from '@/components/image-with-skeleton';
 
 export default async function HomePage({
   searchParams
@@ -78,10 +79,11 @@ export default async function HomePage({
                 <Card key={event.id} className="overflow-hidden flex flex-col hover:shadow-lg transition-all duration-300 border-indigo-50 group">
                   <div className="h-48 relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center transition-transform group-hover:scale-[1.02]">
                     {event.image_url ? (
-                      <img
+                      <ImageWithSkeleton
                         src={event.image_url}
                         alt={event.title}
                         className="w-full h-full object-cover"
+                        containerClassName="absolute inset-0"
                       />
                     ) : (
                       <div className="p-6 text-white text-center">

@@ -138,6 +138,29 @@ export async function getEventBySlug(slug: string): Promise<Event | null> {
   return event as Event | null;
 }
 
+export async function updateEvent(id: string, data: Partial<CreateEventDTO>): Promise<{ error?: string }> {
+  const supabase = await createServerSupabaseClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: 'Unauthorized' };
+  }
+
+  const { error } = await supabase
+    .from('events')
+    .update({ ...data, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .eq('organizer_id', user.id);
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  revalidatePath('/dashboard');
+  revalidatePath(`/dashboard/events/${id}`);
+  return {};
+}
+
 export async function updateEventStatus(id: string, status: EventStatus): Promise<{ error?: string }> {
   const supabase = await createServerSupabaseClient();
   const { data: { user } } = await supabase.auth.getUser();

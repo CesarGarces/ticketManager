@@ -14,6 +14,10 @@ import TicketTypeForm from '@/components/ticket-type-form';
 import PublishEventButton from '@/components/publish-event-button';
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
+import { TicketDistributionChart } from '@/components/dashboard/ticket-distribution-chart';
+import EditEventModal from '@/components/edit-event-modal';
+import ImageWithSkeleton from '@/components/image-with-skeleton';
+import TicketSelloutChart from '@/components/dashboard/ticket-sellout-chart';
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -33,6 +37,16 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
   const totalRevenue = orders.reduce((sum, order) => sum + Number(order.total_amount), 0);
   const totalTicketsSold = ticketTypes.reduce((sum, tt) => sum + tt.quantity_sold, 0);
+  const typeDistribution = ticketTypes.map(tt => ({
+    name: tt.name,
+    value: tt.quantity_sold,
+  }));
+
+  const selloutData = ticketTypes.map(tt => ({
+    name: tt.name,
+    quantitySold: tt.quantity_sold,
+    quantityTotal: tt.quantity_total,
+  }));
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -40,20 +54,22 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
       <main className="container mx-auto px-4 py-8 flex-grow">
         <div className="max-w-5xl mx-auto">
-          <div className="mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <Link href="/dashboard" className="inline-flex items-center text-sm text-gray-600 hover:text-indigo-600 font-medium transition-colors">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {t('dashboard.back_to_dashboard')}
             </Link>
+            <EditEventModal event={event} />
           </div>
           <div className="bg-white rounded-xl shadow-sm border overflow-hidden mb-8">
             <div className={`relative p-8 text-white ${!event.image_url ? 'bg-gradient-to-r from-blue-600 to-purple-600' : ''}`}>
               {event.image_url && (
                 <>
-                  <img
+                  <ImageWithSkeleton
                     src={event.image_url}
                     alt={event.title}
                     className="absolute inset-0 w-full h-full object-cover"
+                    containerClassName="absolute inset-0 w-full h-full"
                   />
                   <div className="absolute inset-0 bg-black/50" />
                 </>
@@ -68,11 +84,13 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
                   </div>
                   <p className="text-blue-50 text-shadow-sm max-w-3xl">{event.description}</p>
                 </div>
-                {event.status === EventStatus.DRAFT && ticketTypes.length > 0 && (
-                  <div className="bg-white/10 p-1 rounded-lg backdrop-blur-sm">
-                    <PublishEventButton eventId={event.id} />
-                  </div>
-                )}
+                <div className="flex items-start gap-2">
+                  {event.status === EventStatus.DRAFT && ticketTypes.length > 0 && (
+                    <div className="bg-white/10 p-1 rounded-lg backdrop-blur-sm">
+                      <PublishEventButton eventId={event.id} />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -108,8 +126,8 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             </Card>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Card>
+          <div className="grid md:grid-cols-3 gap-6 mb-8">
+            <Card className="md:col-span-1">
               <CardHeader>
                 <CardTitle className="text-lg">{t('dashboard.event_details')}</CardTitle>
               </CardHeader>
@@ -138,8 +156,30 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               </CardContent>
             </Card>
 
+            {typeDistribution.length > 0 && (
+              <Card className="md:col-span-1">
+                <CardHeader>
+                  <CardTitle className="text-lg">{t('dashboard.ticket_distribution_event')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <TicketDistributionChart data={typeDistribution} />
+                </CardContent>
+              </Card>
+            )}
+
+            {selloutData.length > 0 && (
+              <Card className="md:col-span-1">
+                <CardHeader>
+                  <CardTitle className="text-lg">{t('dashboard.availability')}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <TicketSelloutChart data={selloutData} />
+                </CardContent>
+              </Card>
+            )}
+
             {event.status === EventStatus.PUBLISHED && (
-              <Card>
+              <Card className="md:col-span-3">
                 <CardHeader>
                   <CardTitle className="text-lg">{t('dashboard.public_page')}</CardTitle>
                 </CardHeader>

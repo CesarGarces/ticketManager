@@ -12,6 +12,7 @@ import MercadoPagoPurchaseButton from '@/components/mercadopago-purchase-button'
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
 import { USER_TYPE } from '@/lib/constants';
+import ImageWithSkeleton from '@/components/image-with-skeleton';
 
 export default async function PublicEventPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -47,10 +48,11 @@ export default async function PublicEventPage({ params }: { params: Promise<{ sl
             <div className={`relative p-8 md:p-12 text-center text-white ${!event.image_url ? 'bg-gradient-to-r from-blue-600 to-purple-600' : ''}`}>
               {event.image_url && (
                 <>
-                  <img
+                  <ImageWithSkeleton
                     src={event.image_url}
                     alt={event.title}
                     className="absolute inset-0 w-full h-full object-cover"
+                    containerClassName="absolute inset-0 w-full h-full"
                   />
                   <div className="absolute inset-0 bg-black/50" />
                 </>

@@ -65,6 +65,7 @@
     "create_first": "Crea tu primer evento para empezar",
     "event_sales": "Ventas por Evento",
     "tickets_per_event": "Tickets vendidos por evento",
+    "revenue_per_event": "Ingresos por evento",
     "ticket_distribution": "Distribución de Tickets",
     "sales_by_category": "Ventas por categoría de ticket",
     "chart_sales_label": "Ventas",
@@ -108,7 +109,12 @@
     "quantity_placeholder": "100",
     "create_ticket_type_btn": "Crear Tipo de Entrada",
     "publish_event": "Publicar Evento",
-    "publishing": "Publicando..."
+    "publishing": "Publicando...",
+    "edit_event": "Editar Evento",
+    "edit_event_desc": "Actualiza los detalles de tu evento",
+    "saving": "Guardando...",
+    "ticket_distribution_event": "Distribución de Tickets",
+    "availability": "Disponibilidad"
   },
   "events": {
     "explore": "Explorar Eventos",

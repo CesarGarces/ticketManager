@@ -8,6 +8,7 @@ import { formatDate } from '@/lib/utils';
 import { getTranslation } from '@/i18n/server';
 import NavHeader from '@/components/nav-header';
 import AppFooter from '@/components/app-footer';
+import ImageWithSkeleton from '@/components/image-with-skeleton';
 
 export default async function EventsPage() {
   const events = await getPublicEvents();
@@ -38,10 +39,11 @@ export default async function EventsPage() {
                 <Card key={event.id} className="overflow-hidden flex flex-col hover:shadow-lg transition-shadow duration-300">
                   <div className="h-48 relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center transition-transform hover:scale-[1.02]">
                     {event.image_url ? (
-                      <img
+                      <ImageWithSkeleton
                         src={event.image_url}
                         alt={event.title}
                         className="w-full h-full object-cover"
+                        containerClassName="absolute inset-0"
                       />
                     ) : (
                       <div className="p-6 text-white text-center">

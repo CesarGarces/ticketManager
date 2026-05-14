@@ -8,9 +8,10 @@ import Link from 'next/link';
 import { Calendar, MapPin, Plus, Users, DollarSign } from 'lucide-react';
 import { formatDate, formatCurrency } from '@/lib/utils';
 import { EventSalesChart } from '@/components/dashboard/event-sales-chart';
-import { TicketDistributionChart } from '@/components/dashboard/ticket-distribution-chart';
+import { RevenueChart } from '@/components/dashboard/revenue-chart';
 import { useTranslation } from '@/i18n/context';
 import CreateEventModal from '@/components/create-event-modal';
+import ImageWithSkeleton from '@/components/image-with-skeleton';
 
 interface DashboardContentProps {
   events: any[];
@@ -77,8 +78,8 @@ export default function DashboardContent({ events, stats }: DashboardContentProp
 
       {/* Charts Section */}
       {events.length > 0 && stats && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-          <Card className="col-span-1">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+          <Card>
             <CardHeader>
               <CardTitle>{t('dashboard.event_sales')}</CardTitle>
               <CardDescription>{t('dashboard.tickets_per_event')}</CardDescription>
@@ -87,13 +88,13 @@ export default function DashboardContent({ events, stats }: DashboardContentProp
               <EventSalesChart data={stats.eventSales} />
             </CardContent>
           </Card>
-          <Card className="col-span-1">
+          <Card>
             <CardHeader>
-              <CardTitle>{t('dashboard.ticket_distribution')}</CardTitle>
-              <CardDescription>{t('dashboard.sales_by_category')}</CardDescription>
+              <CardTitle>{t('dashboard.total_revenue')}</CardTitle>
+              <CardDescription>{t('dashboard.revenue_per_event')}</CardDescription>
             </CardHeader>
             <CardContent>
-              <TicketDistributionChart data={stats.typeDistribution} />
+              <RevenueChart data={stats.eventSales} />
             </CardContent>
           </Card>
         </div>
@@ -120,10 +121,11 @@ export default function DashboardContent({ events, stats }: DashboardContentProp
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer h-full border-indigo-50 overflow-hidden flex flex-col">
                   <div className="h-48 relative overflow-hidden bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center">
                     {event.image_url ? (
-                      <img
+                      <ImageWithSkeleton
                         src={event.image_url}
                         alt={event.title}
                         className="w-full h-full object-cover"
+                        containerClassName="absolute inset-0"
                       />
                     ) : (
                       <div className="p-6 text-white text-center">

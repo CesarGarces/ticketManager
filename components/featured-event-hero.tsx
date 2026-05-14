@@ -3,6 +3,7 @@ import { Calendar, MapPin, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatDate } from '@/lib/utils';
+import ImageWithSkeleton from '@/components/image-with-skeleton';
 
 export type FeaturedEvent = {
   id: string;
@@ -18,10 +19,11 @@ export function FeaturedEventHero({ event, ctaLabel }: { event: FeaturedEvent; c
   return (
     <div className="relative w-full h-[500px] rounded-2xl overflow-hidden mb-12 group">
       {/* Background Image with Zoom Effect */}
-      <img
+      <ImageWithSkeleton
         src={event.imageUrl}
         alt={event.title}
         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        containerClassName="absolute inset-0 w-full h-full"
       />
 
       {/* Gradient Overlay for Text Readability */}
