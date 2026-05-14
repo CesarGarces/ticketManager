@@ -179,5 +179,21 @@
     "check_connection": "Check your connection and try again in a few minutes.",
     "card_balance": "Make sure your credit card has enough balance and is enabled for online payments.",
     "try_different": "Try using a different payment method in MercadoPago."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "mark_all_as_read": "Mark all as read",
+    "no_notifications": "No notifications yet",
+    "ticket_sold_title": "🎟️ Ticket Sold!",
+    "ticket_sold_message": "{quantity} ticket(s) for {event} sold to {buyer}",
+    "purchase_confirmed_title": "✅ Purchase Confirmed!",
+    "purchase_confirmed_message": "Your purchase of {quantity} ticket(s) for {event} is confirmed",
+    "mark_read": "Mark read",
+    "delete": "Delete",
+    "just_now": "just now",
+    "minutes_ago": "{count}m ago",
+    "hours_ago": "{count}h ago",
+    "days_ago": "{count}d ago",
+    "loading": "Loading notifications..."
   }
 }

@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getPaymentInfo } from '@/services/mercadopago/client';
 import { updatePurchasePaymentStatus } from '@/features/purchases/actions';
+import { createNotification } from '@/features/notifications/actions';
+import { createServerSupabaseClient } from '@/services/supabase/client';
 import crypto from 'crypto';
 
 // MercadoPago IPN webhook handler
@@ -81,6 +83,87 @@ export async function POST(request: Request) {
       console.log(
         `[MercadoPago Webhook] Successfully updated purchase ${purchaseId}`
       );
+
+      // Create notifications if payment is approved
+      if (paymentInfo.status === 'approved') {
+        console.log(`[MercadoPago Webhook] Creating notifications for approved payment`);
+        try {
+          const supabase = await createServerSupabaseClient();
+
+          // Fetch purchase details with related data
+          const { data: purchase, error: purchaseError } = await supabase
+            .from('purchases')
+            .select(`
+              *,
+              event:events(*),
+              ticket_type:ticket_types(*)
+            `)
+            .eq('id', purchaseId)
+            .single();
+
+          if (purchaseError || !purchase) {
+            console.error('Error fetching purchase details:', purchaseError);
+          } else {
+            const buyer_email = purchase.buyer_email || 'buyer@example.com';
+            const buyer_name = purchase.buyer_name || 'Buyer';
+            const event_title = purchase.event?.title || 'Event';
+            const ticket_type_name = purchase.ticket_type?.name || 'Ticket';
+            const quantity = purchase.quantity || 1;
+            const amount = purchase.total_amount || 0;
+            const currency = purchase.currency || 'USD';
+
+            // Notification for SELLER (organizer) - Ticket Sold
+            if (purchase.event?.organizer_id) {
+              const sellerNotification = await createNotification({
+                user_id: purchase.event.organizer_id,
+                type: 'ticket_sold',
+                title: '🎟️ Ticket Sold!',
+                message: `${quantity} ticket(s) for "${event_title}" sold to ${buyer_name}`,
+                related_event_id: purchase.event_id,
+                related_purchase_id: purchaseId,
+                buyer_email,
+                buyer_name,
+                event_title,
+                ticket_type_name,
+                quantity,
+                amount,
+                currency,
+              });
+
+              if (sellerNotification.error) {
+                console.error('Error creating seller notification:', sellerNotification.error);
+              } else {
+                console.log(`[MercadoPago Webhook] Created seller notification for event ${purchase.event_id}`);
+              }
+            }
+
+            // Notification for BUYER - Purchase Confirmed
+            const buyerNotification = await createNotification({
+              user_id: purchase.buyer_id,
+              type: 'purchase_confirmed',
+              title: '✅ Purchase Confirmed!',
+              message: `Your purchase of ${quantity} ticket(s) for "${event_title}" is confirmed`,
+              related_event_id: purchase.event_id,
+              related_purchase_id: purchaseId,
+              event_title,
+              ticket_type_name,
+              quantity,
+              amount,
+              currency,
+            });
+
+            if (buyerNotification.error) {
+              console.error('Error creating buyer notification:', buyerNotification.error);
+            } else {
+              console.log(`[MercadoPago Webhook] Created buyer notification for purchase ${purchaseId}`);
+            }
+          }
+        } catch (notificationError) {
+          console.error('[MercadoPago Webhook] Error creating notifications:', notificationError);
+          // Don't fail the webhook if notifications fail
+        }
+      }
+
       return NextResponse.json({ received: true }, { status: 200 });
     } catch (error) {
       console.error('[MercadoPago Webhook] Error processing payment:', error);

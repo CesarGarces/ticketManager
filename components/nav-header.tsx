@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import UserNav from '@/components/user-nav';
 import LanguageSwitcher from '@/components/language-switcher';
 import AuthSwitcher from '@/components/auth-switcher';
+import { NotificationBellWrapper } from '@/components/notification-bell-wrapper';
 import { getProfile } from '@/features/auth/actions';
 import { getTranslation } from '@/i18n/server';
 
@@ -21,6 +22,9 @@ export default async function NavHeader() {
 
         <div className="flex items-center space-x-4">
           <LanguageSwitcher />
+          <div className="h-6 w-px bg-gray-200 mx-2" />
+
+          {profile && <NotificationBellWrapper />}
           <div className="h-6 w-px bg-gray-200 mx-2" />
 
           {profile ? (

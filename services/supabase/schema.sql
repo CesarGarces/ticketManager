@@ -195,3 +195,61 @@ FOR EACH ROW
 EXECUTE FUNCTION update_ticket_stock();
 
 -- Use 'buyer_id' in purchases for compatibility, but it refers to 'profiles' table.
+
+-- Notifications Table
+CREATE TABLE notifications (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  type TEXT NOT NULL CHECK (type IN ('ticket_sold', 'purchase_confirmed', 'payment_verified')),
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  is_read BOOLEAN DEFAULT false,
+  related_event_id UUID REFERENCES events(id) ON DELETE SET NULL,
+  related_purchase_id UUID REFERENCES purchases(id) ON DELETE SET NULL,
+  related_order_id UUID REFERENCES orders(id) ON DELETE SET NULL,
+  buyer_email TEXT,
+  buyer_name TEXT,
+  event_title TEXT,
+  ticket_type_name TEXT,
+  quantity INTEGER,
+  amount DECIMAL(10, 2),
+  currency TEXT DEFAULT 'USD',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Notifications Indexes
+CREATE INDEX idx_notifications_user_id ON notifications(user_id);
+CREATE INDEX idx_notifications_is_read ON notifications(is_read);
+CREATE INDEX idx_notifications_user_read ON notifications(user_id, is_read);
+CREATE INDEX idx_notifications_created_at ON notifications(created_at DESC);
+
+-- Notifications RLS
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own notifications"
+  ON notifications FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "System can insert notifications"
+  ON notifications FOR INSERT
+  WITH CHECK (true);
+
+CREATE POLICY "Users can update their own notifications"
+  ON notifications FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Notifications Updated At Trigger
+CREATE OR REPLACE FUNCTION update_notifications_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER notifications_updated_at_trigger
+BEFORE UPDATE ON notifications
+FOR EACH ROW
+EXECUTE FUNCTION update_notifications_updated_at();
